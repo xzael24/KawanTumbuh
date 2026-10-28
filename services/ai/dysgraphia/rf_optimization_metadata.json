@@ -1,0 +1,47 @@
+{
+  "model_name": "Optimized Random Forest Classifier",
+  "best_params": {
+    "class_weight": "balanced",
+    "criterion": "log_loss",
+    "max_depth": 7,
+    "max_features": null,
+    "min_samples_leaf": 1,
+    "min_samples_split": 2,
+    "n_estimators": 150
+  },
+  "optimal_decision_threshold": 0.42,
+  "feature_names": [
+    "baseline_dev_std",
+    "baseline_waviness",
+    "height_mean",
+    "height_std",
+    "height_cov",
+    "width_mean",
+    "width_std",
+    "width_cov",
+    "aspect_ratio_char_mean",
+    "aspect_ratio_char_std",
+    "slant_angle_mean",
+    "slant_angle_std",
+    "ink_density",
+    "inter_comp_spacing_mean",
+    "inter_comp_spacing_std",
+    "num_components_density",
+    "stroke_roughness_mean",
+    "stroke_roughness_std",
+    "stroke_thickness_mean",
+    "stroke_thickness_std",
+    "glcm_contrast",
+    "glcm_dissimilarity",
+    "glcm_homogeneity",
+    "glcm_energy",
+    "glcm_correlation"
+  ],
+  "cv_performance": {
+    "accuracy": 83.94,
+    "precision": 82.46,
+    "recall": 82.46,
+    "f1_score": 82.46,
+    "roc_auc": 88.94
+  }
+}

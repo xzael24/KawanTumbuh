@@ -1,0 +1,7 @@
+* text=auto
+
+*.pkl binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.ipynb text

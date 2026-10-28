@@ -1,0 +1,32 @@
+# dependencies & build
+node_modules/
+dist/
+build/
+.dart_tool/
+.gradle/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+id_rsa*
+
+# data & arsip (dataset 14 MB + dump SQL tidak masuk repo)
+data/
+*.sql
+*.zip
+
+# logs
+*.log
+hs_err_pid*
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
