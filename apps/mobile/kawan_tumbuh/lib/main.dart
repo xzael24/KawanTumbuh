@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'splash_screen.dart';
+import 'onboarding_screen.dart';
 
 void main() {
   runApp(const KawanTumbuhApp());
@@ -23,6 +24,7 @@ class KawanTumbuhApp extends StatelessWidget {
       home: const SplashScreen(),
       // Daftarkan route untuk halaman berikutnya
       routes: {
+        '/onboarding': (context) => const OnboardingScreen(),
         '/home': (context) => const PlaceholderHomePage(),
       },
     );
