@@ -1,5 +1,7 @@
 # KAWANTUMBUH
 
+Assalamualaikum sahabat mamah dedeh, sebelumnya bagi siapa saja yang melihat repository ini tolong ucapkan ini didalam hati kalian "Ya Allah semoga kelompok ini project Capstone nya lancar tanpa kendala, Aamiin Aamiin Ya Rabbal Alamin"
+
 Sistem Pemantauan Perkembangan dan Stimulasi Terpadu untuk Penanganan Dini Gejala
 *Specific Learning Disorder* (SLD) pada Anak Usia Dasar — disleksia, disgrafia, diskalkulia.
 
