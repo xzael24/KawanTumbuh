@@ -19,11 +19,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'title': 'Tumbuh Bersama\ndi Setiap Langkahnya',
       'subtitle': 'Kenali potensi dan stimulasi tumbuh\nkembangnya sejak dini',
     },
-    // Tambah halaman onboarding lainnya di sini nanti
     {
       'image': 'assets/images/ob1_illustration.png',
-      'title': 'Pantau Perkembangan\nSi Kecil',
-      'subtitle': 'Catat dan pantau setiap milestone\ntumbuh kembang anak Anda',
+      'title': 'Pantau Perkembangan\nLewat Bermain',
+      'subtitle': 'Kenali gaya belajar si kecil lewat\npermainan interaktif',
+    },
+    {
+      'image': 'assets/images/ob1_illustration.png',
+      'title': 'Dampingi Si Kecil Tumbuh\nPercaya Diri',
+      'subtitle': 'Dapatkan panduan stimulasi harian\nsesuai kebutuhan unik si kecil',
     },
   ];
 
@@ -35,6 +39,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       );
     } else {
       _goToHome();
+    }
+  }
+
+  void _onBack() {
+    if (_currentPage > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -50,15 +63,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isFirst = _currentPage == 0;
+    final bool isLast = _currentPage == _pages.length - 1;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFCECD),
       body: SafeArea(
         child: Column(
           children: [
+            // ── Top bar: tombol back (hanya OB 2 & 3) ─────────────────
+            SizedBox(
+              height: 48,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: isFirst
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        onPressed: _onBack,
+                        icon: const Icon(
+                          Icons.chevron_left,
+                          size: 28,
+                          color: Color(0xFF4A4A4A),
+                        ),
+                      ),
+              ),
+            ),
+
             // ── PageView ──────────────────────────────────────────────
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: _pages.length,
                 onPageChanged: (index) {
                   setState(() => _currentPage = index);
@@ -85,17 +120,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // ── Bottom Nav: Skip / Next ────────────────────────────────
+            // ── Bottom Nav: Lewati / Lanjut|Mulai ─────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Skip
+                  // Lewati
                   GestureDetector(
                     onTap: _goToHome,
                     child: Text(
-                      'Skip',
+                      'Lewati',
                       style: GoogleFonts.quicksand(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -104,13 +139,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
 
-                  // Next →
+                  // Lanjut → / Mulai →
                   GestureDetector(
                     onTap: _onNext,
                     child: Row(
                       children: [
                         Text(
-                          'Next',
+                          isLast ? 'Mulai' : 'Lanjut',
                           style: GoogleFonts.quicksand(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -171,7 +206,7 @@ class _OnboardingPage extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: GoogleFonts.quicksand(
-              fontSize: 24,
+              fontSize: 20,
               fontWeight: FontWeight.w700,
               color: const Color(0xFF2D2D2D),
               height: 1.35,
@@ -221,3 +256,7 @@ class _DotIndicator extends StatelessWidget {
     );
   }
 }
+
+
+
+
