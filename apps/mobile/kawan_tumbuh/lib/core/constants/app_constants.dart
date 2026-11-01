@@ -11,5 +11,6 @@ class AppConstants {
   static const String routeRegister      = '/register';
   static const String routeForgotPass    = '/forgot-password';
   static const String routeAddProfile    = '/add-profile';
+  static const String routeLoadingProfile = '/loading-profile';
   static const String routeHome          = '/home';
 }
