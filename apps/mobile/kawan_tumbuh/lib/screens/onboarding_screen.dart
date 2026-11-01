@@ -52,7 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _goToHome() {
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.of(context).pushReplacementNamed('/register');
   }
 
   @override
@@ -122,13 +122,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             // ── Bottom Nav: Lewati / Lanjut|Mulai ─────────────────────
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Lewati
-                  GestureDetector(
-                    onTap: _goToHome,
+                  // Lewati — area klik diperbesar pakai TextButton
+                  TextButton(
+                    onPressed: _goToHome,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      minimumSize: const Size(80, 48),
+                      tapTargetSize: MaterialTapTargetSize.padded,
+                    ),
                     child: Text(
                       'Lewati',
                       style: GoogleFonts.quicksand(
@@ -139,10 +145,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
 
-                  // Lanjut → / Mulai →
-                  GestureDetector(
-                    onTap: _onNext,
+                  // Lanjut → / Mulai → — area klik diperbesar
+                  TextButton(
+                    onPressed: _onNext,
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      minimumSize: const Size(80, 48),
+                      tapTargetSize: MaterialTapTargetSize.padded,
+                    ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           isLast ? 'Mulai' : 'Lanjut',
