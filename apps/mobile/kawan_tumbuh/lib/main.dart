@@ -5,6 +5,7 @@ import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/forgot_password_screen.dart';
 import 'screens/add_profile/add_profile_screen.dart';
+import 'screens/loading_profile_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -34,7 +35,8 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeLogin      : (context) => const LoginScreen(),
         AppConstants.routeRegister   : (context) => const RegisterScreen(),
         AppConstants.routeForgotPass : (context) => const ForgotPasswordScreen(),
-        AppConstants.routeAddProfile : (context) => const AddProfileScreen(),
+        AppConstants.routeAddProfile    : (context) => const AddProfileScreen(),
+        AppConstants.routeLoadingProfile: (context) => const LoadingProfileScreen(),
       },
     );
   }

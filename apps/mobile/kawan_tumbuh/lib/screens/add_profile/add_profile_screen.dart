@@ -42,7 +42,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   void _finish() {
     // TODO: simpan _data ke state management / backend
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.of(context).pushReplacementNamed('/loading-profile');
   }
 
   @override
