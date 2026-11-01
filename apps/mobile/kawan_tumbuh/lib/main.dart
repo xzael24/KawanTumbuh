@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'splash_screen.dart';
-import 'onboarding_screen.dart';
+import 'screens/splash_screen.dart';
+import 'screens/onboarding_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/forgot_password_screen.dart';
+import 'screens/add_profile/add_profile_screen.dart';
+import 'core/constants/app_constants.dart';
 
 void main() {
   runApp(const KawanTumbuhApp());
@@ -12,7 +17,7 @@ class KawanTumbuhApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'KawanTumbuh',
+      title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -24,8 +29,12 @@ class KawanTumbuhApp extends StatelessWidget {
       home: const SplashScreen(),
       // Daftarkan route untuk halaman berikutnya
       routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/home': (context) => const PlaceholderHomePage(),
+        AppConstants.routeOnboarding : (context) => const OnboardingScreen(),
+        AppConstants.routeHome       : (context) => const PlaceholderHomePage(),
+        AppConstants.routeLogin      : (context) => const LoginScreen(),
+        AppConstants.routeRegister   : (context) => const RegisterScreen(),
+        AppConstants.routeForgotPass : (context) => const ForgotPasswordScreen(),
+        AppConstants.routeAddProfile : (context) => const AddProfileScreen(),
       },
     );
   }
