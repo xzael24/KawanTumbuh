@@ -9,99 +9,65 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _logoController;
-  late Animation<double> _logoFade;
-
-  late AnimationController _titleController;
-  late Animation<double> _titleFade;
-
-  late AnimationController _taglineController;
-  late Animation<double> _taglineFade;
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _logoFade;
+  late final Animation<double> _titleFade;
+  late final Animation<double> _taglineFade;
 
   @override
   void initState() {
     super.initState();
 
-    _logoController = AnimationController(
+    _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
-    );
-    _logoFade = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.easeIn),
+      duration: const Duration(milliseconds: 1800),
     );
 
-    _titleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 700),
-    );
-    _titleFade = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _titleController, curve: Curves.easeIn),
-    );
+    // Tiap elemen muncul berurutan dalam satu timeline
+    _logoFade    = _interval(0.00, 0.40);
+    _titleFade   = _interval(0.35, 0.70);
+    _taglineFade = _interval(0.60, 0.90);
 
-    _taglineController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    );
-    _taglineFade = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _taglineController, curve: Curves.easeIn),
-    );
-
-    _runSequence();
+    _ctrl.forward().then((_) async {
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (mounted) Navigator.of(context).pushReplacementNamed('/onboarding');
+    });
   }
 
-  Future<void> _runSequence() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    if (!mounted) return;
-
-    // 1. Logo fade in
-    await _logoController.forward();
-    if (!mounted) return;
-
-    // 2. Title fade in
-    await _titleController.forward();
-    if (!mounted) return;
-
-    // 3. Tagline fade in
-    await _taglineController.forward();
-    if (!mounted) return;
-
-    // 4. Tahan lalu navigate ke onboarding
-    await Future.delayed(const Duration(milliseconds: 1500));
-    if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/onboarding');
-    }
-  }
+  Animation<double> _interval(double begin, double end) =>
+      Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _ctrl,
+          curve: Interval(begin, end, curve: Curves.easeIn),
+        ),
+      );
 
   @override
   void dispose() {
-    _logoController.dispose();
-    _titleController.dispose();
-    _taglineController.dispose();
+    _ctrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo
             FadeTransition(
               opacity: _logoFade,
-              child: Image.asset(
-                'assets/images/logo_kawantumbuh.png',
-                width: 120,
-                height: 120,
+              child: RepaintBoundary(
+                child: Image.asset(
+                  'assets/images/logo_kawantumbuh.png',
+                  width: 120,
+                  height: 120,
+                ),
               ),
             ),
-
             const SizedBox(height: 24),
-
-            // Title
             FadeTransition(
               opacity: _titleFade,
               child: Text(
@@ -114,10 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
             ),
-
             const SizedBox(height: 6),
-
-            // Tagline
             FadeTransition(
               opacity: _taglineFade,
               child: Text(
