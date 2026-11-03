@@ -1,37 +1,75 @@
-# Sentiment Analysis Service (PSC1)
+# Sentiment Analysis Service
 
-**Author:** M Zaim Jauharuddin (2141762079)
-
-Layanan analisis sentimen untuk feedback/rating aplikasi KAWANTUMBUH.
-
-## Model
-
-Model hosted di Hugging Face: [`dimeneid/kawantumbuh-sentimen`](https://huggingface.co/dimeneid/kawantumbuh-sentimen)
-
-Akurasi test: **92.07%** (643 sampel), Macro F1: **0.9206**
-
-Inference via Hugging Face Inference API (gratis, rate limit 1000 req/day).
+FastAPI service for sentiment analysis (positif/negatif/netral).
 
 ## Setup
 
-```bash
-pip install -r requirements.txt
+### 1. Save Model Locally
 
-# Optional: set HF token untuk rate limit lebih tinggi
-export HF_TOKEN=hf_xxxxx
+Run in notebook after training:
 
-uvicorn app:app --reload --port 8001
+```python
+from transformers import pipeline
+
+# Load trained model from HF hub
+pipe = pipeline("text-classification", model="dimeneid/kawantumbuh-sentimen")
+
+# Save as pickle
+import pickle
+with open("models/sentiment_model.pkl", "wb") as f:
+    pickle.dump(pipe, f)
 ```
 
-## Endpoint
+Or download from HF hub manually:
+```bash
+mkdir -p models
+python -c "
+from transformers import pipeline
+import pickle
+pipe = pipeline('text-classification', model='dimeneid/kawantumbuh-sentimen')
+with open('models/sentiment_model.pkl', 'wb') as f:
+    pickle.dump(pipe, f)
+"
+```
 
-- `POST /predict` — input `{"text": "ulasan user..."}` → output `{"sentiment": "positif", "confidence": 0.92}`
+### 2. Install Dependencies
 
-## Use Case
+```bash
+pip install -r requirements.txt
+```
 
-User kasih feedback soal aplikasi → sentiment analysis klasifikasi positif/negatif → admin dashboard agregat sentimen.
+### 3. Run Server
 
-## Dataset & Training
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8001
+```
 
-Training pakai gabungan ulasan MobileJKN + PrimaKU (skor 1 & 5).
-Lihat `notebooks/Transfer_Learning_UTS.ipynb` untuk EDA + training lengkap.
+## Endpoints
+
+- `GET /` - service info
+- `GET /health` - health check
+- `POST /predict` - inference
+  ```json
+  {
+    "text": "aplikasi sangat membantu"
+  }
+  ```
+  Response:
+  ```json
+  {
+    "sentiment": "positif",
+    "confidence": 0.9876
+  }
+  ```
+
+## Deploy to VPS
+
+1. Copy `models/sentiment_model.pkl` to VPS
+2. Build Docker image or run uvicorn directly
+3. Model file ~500MB, include in `.dockerignore` if too large (mount as volume instead)
+
+## Notes
+
+- Model trained on Indonesian text (92% accuracy)
+- Labels: positif, negatif, netral
+- First inference may be slow (model loading)
