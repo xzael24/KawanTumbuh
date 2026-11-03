@@ -1,17 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import pandas as pd
-import re
+import httpx
+import os
 
 app = FastAPI(title="Sentiment Analysis Service")
 
-# Load slang dictionary
-try:
-    slang_df = pd.read_csv("kamus_slang.csv")
-    slang_dict = dict(zip(slang_df.iloc[:, 0], slang_df.iloc[:, 1]))
-except Exception as e:
-    print(f"Warning: kamus_slang.csv not found - {e}")
-    slang_dict = {}
+HF_MODEL = "dimeneid/kawantumbuh-sentimen"
+HF_API_URL = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
+HF_TOKEN = os.getenv("HF_TOKEN", "")  # optional, rate limit tanpa token
 
 
 class TextInput(BaseModel):
@@ -21,15 +17,6 @@ class TextInput(BaseModel):
 class PredictionOutput(BaseModel):
     sentiment: str
     confidence: float
-    cleaned_text: str
-
-
-def preprocess_text(text: str) -> str:
-    """Basic preprocessing"""
-    text = text.lower()
-    text = re.sub(r'[^a-z\s]', '', text)
-    words = [slang_dict.get(w, w) for w in text.split()]
-    return ' '.join(words)
 
 
 @app.get("/")
@@ -37,7 +24,8 @@ def root():
     return {
         "service": "Sentiment Analysis",
         "version": "1.0.0",
-        "model": "IndoBERT (not loaded - placeholder)"
+        "model": HF_MODEL,
+        "inference": "Hugging Face API"
     }
 
 
@@ -47,17 +35,33 @@ def health():
 
 
 @app.post("/predict", response_model=PredictionOutput)
-def predict(input: TextInput):
-    """
-    Predict sentiment from text.
-    Model .pkl (422MB) loaded via volume mount on production.
-    """
-    cleaned = preprocess_text(input.text)
+async def predict(input: TextInput):
+    """Hit Hugging Face Inference API"""
+    headers = {}
+    if HF_TOKEN:
+        headers["Authorization"] = f"Bearer {HF_TOKEN}"
     
-    # ponytail: model inference skipped - load model_final_indobert.pkl when deployed
-    # Dummy response for now
-    return PredictionOutput(
-        sentiment="positif" if len(cleaned) > 20 else "negatif",
-        confidence=0.85,
-        cleaned_text=cleaned
-    )
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        try:
+            response = await client.post(
+                HF_API_URL,
+                headers=headers,
+                json={"inputs": input.text}
+            )
+            response.raise_for_status()
+            result = response.json()
+            
+            # HF returns [{"label": "Positif", "score": 0.99}]
+            if isinstance(result, list) and len(result) > 0:
+                top = result[0]
+                return PredictionOutput(
+                    sentiment=top["label"].lower(),
+                    confidence=round(top["score"], 4)
+                )
+            
+            raise HTTPException(500, "Unexpected HF response format")
+            
+        except httpx.HTTPStatusError as e:
+            raise HTTPException(e.response.status_code, f"HF API error: {e}")
+        except Exception as e:
+            raise HTTPException(500, f"Inference failed: {str(e)}")
