@@ -1,0 +1,21 @@
+# Ignore model files (too large for Git)
+*.pkl
+*.h5
+*.pth
+*.onnx
+*.bin
+
+# Data files
+*.csv
+data/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
