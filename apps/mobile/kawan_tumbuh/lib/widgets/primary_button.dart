@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
+import '../core/utils/responsive.dart';
 
 /// Tombol primer pink yang dipakai di seluruh app.
 class PrimaryButton extends StatelessWidget {
@@ -17,9 +18,10 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     return SizedBox(
       width: double.infinity,
-      height: 52,
+      height: r.h(52),
       child: ElevatedButton(
         onPressed: enabled ? onPressed : null,
         style: ElevatedButton.styleFrom(
@@ -27,13 +29,13 @@ class PrimaryButton extends StatelessWidget {
           disabledBackgroundColor: AppColors.pink.withValues(alpha: 0.45),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(r.r(32)),
           ),
         ),
         child: Text(
           label,
           style: AppTextStyles.inter(
-            15,
+            r.sp(15),
             FontWeight.w600,
             enabled
                 ? AppColors.textDark

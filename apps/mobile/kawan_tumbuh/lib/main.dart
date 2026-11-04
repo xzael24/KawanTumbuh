@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/login_screen.dart';
@@ -16,6 +17,10 @@ import 'screens/assessment_dysgraphia_intro_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   runApp(const KawanTumbuhApp());
 }
 
