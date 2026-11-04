@@ -7,6 +7,13 @@ import 'screens/register_screen.dart';
 import 'screens/forgot_password_screen.dart';
 import 'screens/add_profile/add_profile_screen.dart';
 import 'screens/loading_profile_screen.dart';
+import 'screens/assessment_overview_screen.dart';
+import 'screens/countdown_screen.dart';
+import 'screens/assessment_dyscalculia_screen.dart';
+import 'screens/apresiasi_screen.dart';
+import 'screens/apresiasi_dyslexia_screen.dart';
+import 'screens/assessment_dyslexia_screen.dart';
+import 'screens/assessment_dysgraphia_intro_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -42,6 +49,13 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeForgotPass : (context) => const ForgotPasswordScreen(),
         AppConstants.routeAddProfile    : (context) => const AddProfileScreen(),
         AppConstants.routeLoadingProfile: (context) => const LoadingProfileScreen(),
+        AppConstants.routeAssessmentOverview:   (context) => const AssessmentOverviewScreen(),
+        AppConstants.routeCountdown:             (context) => const CountdownScreen(),
+        AppConstants.routeAssessmentDyscalculia: (context) => const AssessmentDyscalculiaScreen(),
+        AppConstants.routeApresiasi:             (context) => const ApresiasiScreen(),
+        AppConstants.routeAssessmentDyslexia:    (context) => const AssessmentDyslexiaScreen(),
+        AppConstants.routeApresiasiDyslexia:          (context) => const ApresiasiDyslexiaScreen(),
+        AppConstants.routeAssessmentDysgraphiaIntro:  (context) => const AssessmentDysgraphiaIntroScreen(),
       },
     );
   }

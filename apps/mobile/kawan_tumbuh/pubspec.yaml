@@ -66,6 +66,9 @@ flutter:
     - assets/images/reset_password_illustration.png
     - assets/images/avatar_boy.png
     - assets/images/avatar_girl.png
+    - assets/images/assesment_ikhtisar.png
+    - assets/images/apresiasi_kids.png
+    - assets/images/apresiasi_kids.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -5,7 +6,8 @@ class LoadingProfileScreen extends StatefulWidget {
   const LoadingProfileScreen({super.key});
 
   @override
-  State<LoadingProfileScreen> createState() => _LoadingProfileScreenState();
+  State<LoadingProfileScreen> createState() =>
+      _LoadingProfileScreenState();
 }
 
 class _LoadingProfileScreenState extends State<LoadingProfileScreen>
@@ -15,29 +17,60 @@ class _LoadingProfileScreenState extends State<LoadingProfileScreen>
 
   late final AnimationController _pulseCtrl;
 
+  double _progress = 0.0;
+
   @override
   void initState() {
     super.initState();
 
-    // Progress 0 → 1 dalam 3 detik, lalu navigate
+    // Progress animation
     _progressCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3000),
     );
+
     _progressAnim = CurvedAnimation(
       parent: _progressCtrl,
       curve: Curves.easeInOut,
     );
-    _progressCtrl.forward().then((_) async {
-      await Future.delayed(const Duration(milliseconds: 400));
-      if (mounted) Navigator.of(context).pushReplacementNamed('/home');
-    });
 
-    // Pulse loop
+    _progressCtrl.forward();
+
+    // Pulse animation
     _pulseCtrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2400),
     )..repeat();
+
+    _startProgress();
+  }
+
+  /// Simulasi loading progress 0 → 100%
+  /// lalu navigasi ke assessment overview.
+  void _startProgress() async {
+    const totalDuration = Duration(milliseconds: 3000);
+    const tickInterval = Duration(milliseconds: 50);
+
+    final totalTicks =
+        totalDuration.inMilliseconds ~/ tickInterval.inMilliseconds;
+
+    for (int i = 1; i <= totalTicks; i++) {
+      await Future.delayed(tickInterval);
+
+      if (!mounted) return;
+
+      setState(() {
+        _progress = i / totalTicks;
+      });
+    }
+
+    await Future.delayed(const Duration(milliseconds: 400));
+
+    if (!mounted) return;
+
+    Navigator.of(context).pushReplacementNamed(
+      '/assessment-overview',
+    );
   }
 
   @override
@@ -120,7 +153,9 @@ class _LoadingProfileScreenState extends State<LoadingProfileScreen>
                   height: 1.4,
                 ),
               ),
+
               const SizedBox(height: 14),
+
               Text(
                 'Menyesuaikan materi asesmen dan panduan\nstimulasi belajar sesuai usia Si Kecil',
                 textAlign: TextAlign.center,
@@ -137,7 +172,8 @@ class _LoadingProfileScreenState extends State<LoadingProfileScreen>
               AnimatedBuilder(
                 animation: _progressAnim,
                 builder: (context, _) {
-                  final percent = (_progressAnim.value * 100).round();
+                  final percent = (_progress * 100).round();
+
                   return Column(
                     children: [
                       Row(
@@ -162,14 +198,17 @@ class _LoadingProfileScreenState extends State<LoadingProfileScreen>
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 8),
+
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: LinearProgressIndicator(
-                          value: _progressAnim.value,
+                          value: _progress,
                           minHeight: 6,
                           backgroundColor: const Color(0xFFEEEEEE),
-                          valueColor: const AlwaysStoppedAnimation<Color>(
+                          valueColor:
+                              const AlwaysStoppedAnimation<Color>(
                             Color(0xFFFFCECD),
                           ),
                         ),
@@ -188,9 +227,7 @@ class _LoadingProfileScreenState extends State<LoadingProfileScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Widget kecil — tiap ring pulse
-// ─────────────────────────────────────────────────────────────────────────────
 class _PulseRing extends StatelessWidget {
   const _PulseRing({
     required this.size,
@@ -221,9 +258,7 @@ class _PulseRing extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Widget inti
-// ─────────────────────────────────────────────────────────────────────────────
 class _CoreIcon extends StatelessWidget {
   const _CoreIcon();
 

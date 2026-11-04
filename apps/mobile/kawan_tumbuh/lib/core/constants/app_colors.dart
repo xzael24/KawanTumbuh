@@ -11,4 +11,10 @@ class AppColors {
   static const Color textMuted   = Color(0xFF7A7A7A);
   static const Color border      = Color(0xFFDDDDDD);
   static const Color cardCream   = Color(0xFFF5F0E8);
+
+  // — Assessment —
+  static const Color teal        = Color(0xFF5F8F8A); // tombol & aksen assessment
+  static const Color tealLight   = Color(0xFFE8F2F1); // background ilustrasi
+  static const Color tealMuted   = Color(0xFFA8C8C4); // elemen sekunder teal
+  static const Color linkBlue    = Color(0xFF2563EB); // teks link persetujuan
 }
