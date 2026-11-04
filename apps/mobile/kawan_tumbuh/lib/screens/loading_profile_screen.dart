@@ -92,10 +92,10 @@ class _LoadingProfileScreenState extends State<LoadingProfileScreen>
       });
     }
 
-    // Selesai → navigasi ke home
+    // Selesai → navigasi ke assessment overview
     await Future.delayed(const Duration(milliseconds: 400));
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed('/assessment-overview');
     }
   }
 
