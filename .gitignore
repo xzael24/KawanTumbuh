@@ -30,3 +30,7 @@ hs_err_pid*
 .idea/
 .DS_Store
 Thumbs.db
+
+# opencode lokal (konfigurasi pribadi, jangan di-commit)
+opencode.json
+opencode.jsonc
