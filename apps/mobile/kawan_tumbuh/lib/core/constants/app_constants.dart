@@ -20,4 +20,5 @@ class AppConstants {
   static const String routeAssessmentDyslexia    = '/assessment-dyslexia';
   static const String routeApresiasiDyslexia       = '/apresiasi-dyslexia';
   static const String routeAssessmentDysgraphiaIntro = '/assessment-dysgraphia-intro';
+  static const String routeDysgraphiaCamera           = '/dysgraphia-camera';
 }

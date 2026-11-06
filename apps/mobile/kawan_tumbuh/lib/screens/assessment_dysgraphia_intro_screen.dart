@@ -14,14 +14,13 @@ class AssessmentDysgraphiaIntroScreen extends StatelessWidget {
   static const String _sentence = 'Ini Ibu Budi';
 
   void _onFotoTulisan(BuildContext context) {
-    // TODO: navigasi ke halaman upload / review foto tulisan
-    Navigator.of(context).pushReplacementNamed('/home');
+    Navigator.of(context).pushNamed('/dysgraphia-camera');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F6F0),
+      backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
         child: Column(
           children: [
