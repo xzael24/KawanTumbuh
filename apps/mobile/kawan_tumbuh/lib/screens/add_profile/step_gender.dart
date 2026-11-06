@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/responsive.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/step_header.dart';
 import '../../widgets/step_title.dart';
@@ -37,8 +38,9 @@ class _StepGenderState extends State<StepGender> {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -47,11 +49,11 @@ class _StepGenderState extends State<StepGender> {
             totalSteps: widget.totalSteps,
             onBack: widget.onBack,
           ),
-          const SizedBox(height: 36),
+          SizedBox(height: r.h(36)),
           const Center(child: StepTitle()),
           const Spacer(),
-          Text('Gender', style: AppTextStyles.labelDark),
-          const SizedBox(height: 16),
+          Text('Gender', style: AppTextStyles.inter(r.sp(14), FontWeight.w600, AppColors.textDark)),
+          SizedBox(height: r.h(16)),
           Row(
             children: [
               Expanded(
@@ -62,7 +64,7 @@ class _StepGenderState extends State<StepGender> {
                   onTap: () => setState(() => _selected = 'laki-laki'),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: r.w(16)),
               Expanded(
                 child: GenderCard(
                   label: 'Perempuan',
@@ -73,13 +75,13 @@ class _StepGenderState extends State<StepGender> {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: r.h(32)),
           PrimaryButton(
             label: 'Simpan & Lanjut',
             enabled: _selected.isNotEmpty,
             onPressed: () => widget.onNext(_selected),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: r.h(32)),
         ],
       ),
     );
@@ -105,22 +107,22 @@ class GenderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
-          // Border pink peach HANYA melingkari gambar
           AnimatedContainer(
             duration: const Duration(milliseconds: 180),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(r.r(14)),
               border: Border.all(
                 color: selected ? AppColors.pinkBorder : Colors.transparent,
                 width: 4,
               ),
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(11),
+              borderRadius: BorderRadius.circular(r.r(11)),
               child: Image.asset(
                 assetPath,
                 fit: BoxFit.cover,
@@ -128,10 +130,10 @@ class GenderCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: r.h(10)),
           Text(
             label,
-            style: AppTextStyles.inter(13, FontWeight.w600, AppColors.textDark),
+            style: AppTextStyles.inter(r.sp(13), FontWeight.w600, AppColors.textDark),
           ),
         ],
       ),

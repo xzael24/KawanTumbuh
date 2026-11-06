@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/responsive.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/step_header.dart';
 import '../../widgets/step_title.dart';
@@ -67,8 +68,9 @@ class _StepDateOfBirthState extends State<StepDateOfBirth> {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -77,9 +79,9 @@ class _StepDateOfBirthState extends State<StepDateOfBirth> {
             totalSteps: widget.totalSteps,
             onBack: widget.onBack,
           ),
-          const SizedBox(height: 36),
+          SizedBox(height: r.h(36)),
           const Center(child: StepTitle()),
-          const SizedBox(height: 28),
+          SizedBox(height: r.h(28)),
           _InlineCalendar(
             displayMonth: _displayMonth,
             selected: _selected,
@@ -96,7 +98,7 @@ class _StepDateOfBirthState extends State<StepDateOfBirth> {
             enabled: _selected != null,
             onPressed: () => widget.onNext(_selected!),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: r.h(32)),
         ],
       ),
     );
@@ -139,21 +141,22 @@ class _InlineCalendarState extends State<_InlineCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.border, width: 1.2),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(r.r(16)),
       ),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(r.w(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'SELECT DATE OF BIRTH',
-            style: AppTextStyles.inter(11, FontWeight.w600, AppColors.textMuted,
-                letterSpacing: 0.8),
+            style: AppTextStyles.inter(r.sp(11), FontWeight.w600,
+                AppColors.textMuted, letterSpacing: 0.8),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: r.h(10)),
           Row(
             children: [
               GestureDetector(
@@ -164,14 +167,14 @@ class _InlineCalendarState extends State<_InlineCalendar> {
                   children: [
                     Text(
                       '${widget.monthNames[widget.displayMonth.month - 1]} ${widget.displayMonth.year}',
-                      style: AppTextStyles.sora(18, FontWeight.w700, AppColors.pink),
+                      style: AppTextStyles.sora(r.sp(18), FontWeight.w700, AppColors.pink),
                     ),
-                    const SizedBox(width: 4),
+                    SizedBox(width: r.w(4)),
                     AnimatedRotation(
                       turns: _showYearPicker ? 0.5 : 0.0,
                       duration: const Duration(milliseconds: 200),
-                      child: const Icon(Icons.keyboard_arrow_down,
-                          size: 18, color: AppColors.pink),
+                      child: Icon(Icons.keyboard_arrow_down,
+                          size: r.r(18), color: AppColors.pink),
                     ),
                   ],
                 ),
@@ -181,23 +184,23 @@ class _InlineCalendarState extends State<_InlineCalendar> {
                 GestureDetector(
                   onTap: widget.onPrevMonth,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: const Icon(Icons.chevron_left,
-                        size: 20, color: AppColors.textMuted),
+                    padding: EdgeInsets.symmetric(horizontal: r.w(6)),
+                    child: Icon(Icons.chevron_left,
+                        size: r.r(20), color: AppColors.textMuted),
                   ),
                 ),
                 GestureDetector(
                   onTap: widget.onNextMonth,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: const Icon(Icons.chevron_right,
-                        size: 20, color: AppColors.textMuted),
+                    padding: EdgeInsets.symmetric(horizontal: r.w(6)),
+                    child: Icon(Icons.chevron_right,
+                        size: r.r(20), color: AppColors.textMuted),
                   ),
                 ),
               ],
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: r.h(16)),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 200),
             child: _showYearPicker
@@ -270,17 +273,18 @@ class _YearGridState extends State<_YearGrid> {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     final years = List.generate(
         widget.maxYear - widget.minYear + 1, (i) => widget.minYear + i);
     return SizedBox(
-      height: 200,
+      height: r.h(200),
       child: GridView.builder(
         controller: _scrollCtrl,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           childAspectRatio: 2.4,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
+          mainAxisSpacing: r.h(8),
+          crossAxisSpacing: r.w(8),
         ),
         itemCount: years.length,
         itemBuilder: (context, index) {
@@ -292,7 +296,7 @@ class _YearGridState extends State<_YearGrid> {
               duration: const Duration(milliseconds: 150),
               decoration: BoxDecoration(
                 color: isActive ? AppColors.pink : AppColors.cardCream,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(r.r(8)),
                 border: Border.all(
                   color: isActive ? AppColors.pinkBorder : Colors.transparent,
                   width: 1.5,
@@ -302,7 +306,7 @@ class _YearGridState extends State<_YearGrid> {
               child: Text(
                 '$year',
                 style: AppTextStyles.inter(
-                  13,
+                  r.sp(13),
                   isActive ? FontWeight.w700 : FontWeight.w500,
                   isActive ? AppColors.textDark : AppColors.textMuted,
                 ),
@@ -334,6 +338,11 @@ class _CalendarGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
+    // ukuran cell hari — muat 7 kolom dalam lebar kalender
+    final calendarWidth = MediaQuery.of(context).size.width - r.w(48) - r.w(40);
+    final cellSize = (calendarWidth / 7).floorToDouble();
+
     final firstDay = DateTime(displayMonth.year, displayMonth.month, 1);
     final lastDay = DateTime(displayMonth.year, displayMonth.month + 1, 0);
     final startOffset = (firstDay.weekday - 1) % 7;
@@ -346,21 +355,21 @@ class _CalendarGrid extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: dayLabels
               .map((d) => SizedBox(
-                    width: 32,
+                    width: cellSize,
                     child: Center(
                       child: Text(
                         d,
                         style: AppTextStyles.inter(
-                            12, FontWeight.w600, AppColors.textMuted),
+                            r.sp(12), FontWeight.w600, AppColors.textMuted),
                       ),
                     ),
                   ))
               .toList(),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: r.h(8)),
         ...List.generate(rows, (row) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 4),
+            padding: EdgeInsets.only(bottom: r.h(4)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(7, (col) {
@@ -379,8 +388,8 @@ class _CalendarGrid extends StatelessWidget {
                 return GestureDetector(
                   onTap: date != null ? () => onSelectDay(date) : null,
                   child: Container(
-                    width: 32,
-                    height: 32,
+                    width: cellSize,
+                    height: cellSize,
                     decoration: BoxDecoration(
                       color: isSelected ? AppColors.pink : Colors.transparent,
                       shape: BoxShape.circle,
@@ -389,7 +398,7 @@ class _CalendarGrid extends StatelessWidget {
                     child: Text(
                       isCurrentMonth ? '$dayNum' : '',
                       style: AppTextStyles.inter(
-                        13,
+                        r.sp(13),
                         isSelected ? FontWeight.w700 : FontWeight.w500,
                         isSelected
                             ? AppColors.textDark

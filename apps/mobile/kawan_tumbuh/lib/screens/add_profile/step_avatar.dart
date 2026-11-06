@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/responsive.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/step_header.dart';
 import '../../widgets/step_title.dart';
@@ -27,7 +28,6 @@ class _StepAvatarState extends State<StepAvatar> {
   String? _photoPath;
 
   void _onPickPhoto() {
-    // TODO: implementasi image_picker saat backend siap
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -43,8 +43,9 @@ class _StepAvatarState extends State<StepAvatar> {
 
   @override
   Widget build(BuildContext context) {
+    final r = Responsive.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,7 +54,7 @@ class _StepAvatarState extends State<StepAvatar> {
             totalSteps: widget.totalSteps,
             onBack: widget.onBack,
           ),
-          const SizedBox(height: 36),
+          SizedBox(height: r.h(36)),
           const Center(child: StepTitle()),
           const Spacer(),
           Center(
@@ -61,14 +62,14 @@ class _StepAvatarState extends State<StepAvatar> {
               children: [
                 Text(
                   'Tambah Foto',
-                  style: AppTextStyles.inter(14, FontWeight.w700, AppColors.textDark),
+                  style: AppTextStyles.inter(r.sp(14), FontWeight.w700, AppColors.textDark),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: r.h(16)),
                 GestureDetector(
                   onTap: _onPickPhoto,
                   child: Container(
-                    width: 130,
-                    height: 130,
+                    width: r.r(130),
+                    height: r.r(130),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
@@ -84,16 +85,16 @@ class _StepAvatarState extends State<StepAvatar> {
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.camera_alt_outlined,
                                 color: AppColors.pink,
-                                size: 36,
+                                size: r.r(36),
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: r.h(6)),
                               Text(
                                 'ADD PHOTO',
                                 style: AppTextStyles.inter(
-                                  10,
+                                  r.sp(10),
                                   FontWeight.w700,
                                   AppColors.pink,
                                   letterSpacing: 0.8,
@@ -111,7 +112,7 @@ class _StepAvatarState extends State<StepAvatar> {
             label: 'Selesai',
             onPressed: () => widget.onFinish(_photoPath),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: r.h(32)),
         ],
       ),
     );
