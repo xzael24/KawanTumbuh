@@ -59,10 +59,8 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   }
 
   void _usePicture() {
-    Navigator.of(context).pushNamed(
-      '/dysgraphia-review',
-      arguments: _selectedPath,
-    );
+    // TODO: ganti ke /dysgraphia-review setelah backend siap
+    Navigator.of(context).pushReplacementNamed('/apresiasi-dysgraphia');
   }
 
   @override

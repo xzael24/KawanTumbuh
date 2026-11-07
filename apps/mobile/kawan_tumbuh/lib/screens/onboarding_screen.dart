@@ -203,16 +203,20 @@ class _OnboardingPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Ilustrasi
-          Image.asset(
-            imagePath,
-            height: 280,
-            fit: BoxFit.contain,
+          // Ilustrasi — pakai Flexible agar menyusut di layar kecil
+          Flexible(
+            flex: 5,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 32),
 
           // Judul
           Text(
@@ -239,6 +243,8 @@ class _OnboardingPage extends StatelessWidget {
               height: 1.6,
             ),
           ),
+
+          const Flexible(flex: 1, child: SizedBox()),
         ],
       ),
     );

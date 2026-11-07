@@ -74,6 +74,7 @@ flutter:
     - assets/images/assesment_ikhtisar.png
     - assets/images/apresiasi_kids.png
     - assets/images/alarm_clock.png
+    - assets/images/hasil_assessment.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -132,7 +132,9 @@ class _AssessmentDyslexiaScreenState extends State<AssessmentDyslexiaScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,7 +193,7 @@ class _AssessmentDyslexiaScreenState extends State<AssessmentDyslexiaScreen>
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 24),
 
               // ── Label STATUS MEREKAM ────────────────────────
               Text(
@@ -324,6 +326,7 @@ class _AssessmentDyslexiaScreenState extends State<AssessmentDyslexiaScreen>
               ),
             ],
           ),
+        ),
         ),
       ),
     );
