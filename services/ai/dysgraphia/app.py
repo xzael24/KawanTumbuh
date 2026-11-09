@@ -25,7 +25,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 import cv2
 import joblib
 import numpy as np
-from PIL import Image, ImageTk
+from PIL import Image
 
 # Library Feature Extraction
 from scipy.ndimage import distance_transform_edt
