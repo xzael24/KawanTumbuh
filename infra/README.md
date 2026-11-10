@@ -81,6 +81,37 @@ curl -X POST http://localhost/api/v1/auth/login \
 | minio (opsional) | 9000, 9001 | 127.0.0.1:9000, 127.0.0.1:9001 |
 | redis (opsional) | 6379 | - |
 
+## Kesesuaian dengan diagram deployment
+
+Referensi: `Gemini_Generated_Image_j60sfqj60sfqj60s.jpeg` (diagram deployment
+KAWANTUMBUH).
+
+| Komponen di diagram | Implementasi di folder ini |
+|---|---|
+| Mobile App Flutter (thin client) | Di luar compose; mengakses `https://domain/api/v1/*` |
+| VPS Ubuntu - Docker Compose | Seluruh stack di `docker-compose.yml` |
+| NGINX reverse proxy / API gateway | Service `nginx`, port 80/443, TLS siap diaktifkan |
+| TLS, rate limit, upload limit | Blok TLS (komentar), `limit_req`, `client_max_body_size 12m` |
+| `/api/v1/auth`, `users`, `children`, `sessions`, `reports` | `location /api/v1/` → `api:3000`; `sessions`/`reports` otomatis ikut begitu modulnya dibuat |
+| Opsional `/api/v1/ai/*` (wajib `auth_request`) | Default lewat NestJS; contoh pass-through + `auth_request` tersedia sebagai komentar di `default.conf` |
+| Backend NestJS `apps/api:3000` | Service `api` |
+| PostgreSQL `:5432` | Service `db`, volume `pg_data` |
+| Object storage (volume / MinIO) | Volume `media_data` (default), MinIO via profile `storage` |
+| Job queue opsional | Redis via profile `queue` |
+| Disgrafia FastAPI `:8002` | Service `ai-dysgraphia` |
+| Disleksia FastAPI `:8003` | Service `ai-dyslexia` |
+| Diskalkulia FastAPI `:8004` | Service `ai-dyscalculia` |
+| Sentimen FastAPI `:8005` (opsional) | Service `ai-sentiment`, profile `ai-sentiment` |
+| HTTP/REST internal / gRPC | HTTP/REST internal lewat network `backend`; gRPC belum dipakai |
+
+Dua penyimpangan yang disengaja:
+
+1. **TLS belum aktif** karena sertifikat belum tersedia. Blok HTTPS sudah
+   disiapkan; tinggal letakkan `fullchain.pem` + `privkey.pem` lalu aktifkan.
+2. **`/api/v1/ai/*` tidak di-proxy langsung** ke FastAPI. Semua lewat NestJS
+   agar token, audit, dan hasil analisis tercatat. Pass-through langsung hanya
+   boleh diaktifkan bersama `auth_request`.
+
 ## Profile opsional
 
 Service opsional tidak ikut `docker compose up` biasa.
