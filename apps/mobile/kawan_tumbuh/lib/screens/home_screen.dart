@@ -488,7 +488,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return GestureDetector(
                 onTap: () {
                   setState(() => _selectedIndex = index);
-                  if (index == 2) {
+                  if (index == 1) {
+                    Navigator.pushNamed(context, '/treatment-dyscalculia');
+                  } else if (index == 2) {
                     Navigator.pushNamed(context, '/artikel');
                   }
                 },

@@ -21,4 +21,22 @@ class AppAssets {
   static const String artikelDyscalculia = 'assets/images/artikel_dyscalculia.png';
   static const String artikelPolaAsuh    = 'assets/images/artikel_pola_asuh.png';
   static const String artikelDetailDisleksia = 'assets/images/artikel_detail_disleksia.png';
+
+  // — Treatment —
+  static const String therapyDyscalculia  = 'assets/images/therapy_dyscalculia.png';
+  static const String therapyDyslexia     = 'assets/images/therapy_dyslexia.png';
+  static const String therapyDysgraphia   = 'assets/images/therapy_dysgraphia.png';
+
+  // — Sesi Diskalkulia (ganti gambar sesuai kebutuhan di assets/images) —
+  static const String sessionDyscalculia1 = 'assets/images/session_dyscalculia_1.png';
+  static const String sessionDyscalculia2 = 'assets/images/session_dyscalculia_2.png';
+  static const String sessionDyscalculia3 = 'assets/images/session_dyscalculia_3.png';
+  static const String sessionDyscalculia4 = 'assets/images/session_dyscalculia_4.png';
+  static const String sessionDyscalculia5 = 'assets/images/session_dyscalculia_5.png';
+  static const String sessionDyscalculia6 = 'assets/images/session_dyscalculia_6.png';
+  static const String sessionDyscalculia7 = 'assets/images/session_dyscalculia_7.png';
+
+  // — Progress & Evaluasi —
+  static const String progressDyscalculia  = 'assets/images/progress_dyscalculia.png';
+  static const String evaluasiDyscalculia  = 'assets/images/evaluasi_dyscalculia.png';
 }
