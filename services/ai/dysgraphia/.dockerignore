@@ -1,0 +1,10 @@
+.venv
+venv
+__pycache__
+*.pyc
+*.ipynb
+*.csv
+DATASET DYSGRAPHIA HANDWRITING
+.git
+.gitignore
+.env

@@ -5,6 +5,10 @@ import numpy as np
 
 app = FastAPI(title="KAWANTUMBUH - Dyscalculia RT Screener")
 
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "dyscalculia"}
+
 # Skema data JSON yang diterima dari NestJS
 class SessionData(BaseModel):
     jumlah_titik: int

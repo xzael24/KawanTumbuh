@@ -33,7 +33,8 @@ export class RefreshToken {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
+  // Union `User | null` mencegah TDZ crash siklus import ESM (lihat child.entity.ts).
   @ManyToOne(() => User, (user) => user.refreshTokens, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: User | null;
 }

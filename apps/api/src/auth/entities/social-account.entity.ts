@@ -38,7 +38,8 @@ export class SocialAccount {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
+  // Union `User | null` mencegah TDZ crash siklus import ESM (lihat child.entity.ts).
   @ManyToOne(() => User, (user) => user.socialAccounts, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: User | null;
 }

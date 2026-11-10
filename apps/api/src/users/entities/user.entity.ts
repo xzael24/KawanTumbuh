@@ -21,7 +21,8 @@ export class User {
   @Column({ type: 'varchar', length: 50, unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 25 })
+  // Menyimpan hash scrypt (bukan password asli), butuh panjang > 100 karakter.
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
   @Column({ name: 'terms_accepted_at', type: 'timestamp' })

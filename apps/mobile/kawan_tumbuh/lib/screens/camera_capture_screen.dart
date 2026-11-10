@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 // ─────────────────────────────────────────────────────────────
-// Camera Capture Screen — Upload dari Galeri
-// Pengguna memilih foto tulisan dari galeri HP.
+// Camera Capture Screen — Upload Dari Kamera Atau Galeri
+// Pengguna memilih foto tulisan dari galeri HP atau buka kamera.
 // ─────────────────────────────────────────────────────────────
 class CameraCaptureScreen extends StatefulWidget {
   const CameraCaptureScreen({super.key});
@@ -17,6 +17,70 @@ class CameraCaptureScreen extends StatefulWidget {
 class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
   String? _selectedPath;
   bool _isPicking = false;
+  bool _isUsingCamera = true; // ← default pakai kamera
+
+  // Fungsi toggle source (dikelola di parent state)
+  void _toggleSource() {
+    setState(() {
+      _isUsingCamera = !_isUsingCamera;
+    });
+  }
+
+  Future<void> _pickFromCamera() async {
+    if (_isPicking) return;
+    setState(() => _isPicking = true);
+
+    try {
+      final picker = ImagePicker();
+      final XFile? picked = await picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 95,
+      );
+
+      if (!mounted) return;
+
+      if (picked != null) {
+        setState(() => _selectedPath = picked.path);
+      }
+    } catch (e) {
+      // Jika user deny ijin kamera, fallback ke gallery
+      if (!mounted) return;
+      if (e.toString().toLowerCase().contains('camera') ||
+          e.toString().toLowerCase().contains('permission')) {
+        // Tampil pesan singkat lalu pakai gallery
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Kamera tidak diizinkan, menggunakan galeri.',
+              style: GoogleFonts.quicksand(color: Colors.white),
+            ),
+            backgroundColor: Colors.orangeAccent,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+        // Auto fallback ke gallery
+        _toggleSource();
+        await _pickFromGallery();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Gagal membuka kamera, coba lagi: $e',
+              style: GoogleFonts.quicksand(color: Colors.white),
+            ),
+            backgroundColor: Colors.redAccent,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isPicking = false);
+    }
+  }
 
   Future<void> _pickFromGallery() async {
     if (_isPicking) return;
@@ -72,12 +136,15 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
           duration: const Duration(milliseconds: 250),
           child: _selectedPath == null
               ? _UploadView(
-                  key: const ValueKey('upload'),
+                  key: ValueKey('upload'),
                   isPicking: _isPicking,
-                  onPick: _pickFromGallery,
+                  isUsingCamera: _isUsingCamera,
+                  onPickCamera: _pickFromCamera,
+                  onPickGallery: _pickFromGallery,
+                  onToggleSource: _toggleSource,
                 )
               : _PreviewView(
-                  key: const ValueKey('preview'),
+                  key: ValueKey('preview'),
                   imagePath: _selectedPath!,
                   onRetake: _retake,
                   onUse: _usePicture,
@@ -89,96 +156,119 @@ class _CameraCaptureScreenState extends State<CameraCaptureScreen> {
 }
 
 // ─────────────────────────────────────────────────────────────
-// View: Pilih dari Galeri
+// View: Atau Camera, Atau Galeri
 // ─────────────────────────────────────────────────────────────
 class _UploadView extends StatelessWidget {
   const _UploadView({
     super.key,
     required this.isPicking,
-    required this.onPick,
+    required this.isUsingCamera,
+    required this.onPickCamera,
+    required this.onPickGallery,
+    required this.onToggleSource,
   });
 
   final bool isPicking;
-  final VoidCallback onPick;
+  final bool isUsingCamera;
+  final VoidCallback onPickCamera;
+  final VoidCallback onPickGallery;
+  final VoidCallback onToggleSource;
 
   @override
   Widget build(BuildContext context) {
     final double boxWidth = MediaQuery.of(context).size.width - 48;
+    String toggleLabel() => isUsingCamera ? 'Kamera' : 'Galeri';
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 48),
+          const SizedBox(height: 32),
+
+          // ── Toggle Kamera / Galeri ───────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEAE6DF),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _SourceButton(
+                      label: 'Kamera',
+                      icon: Icons.camera_alt_outlined,
+                      selected: isUsingCamera,
+                      onTap: isPicking || isUsingCamera ? null : onToggleSource,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: _SourceButton(
+                      label: 'Galeri',
+                      icon: Icons.photo_library_outlined,
+                      selected: !isUsingCamera,
+                      onTap: isPicking || !isUsingCamera ? null : onToggleSource,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
 
           // ── Kotak upload ─────────────────────────────────────
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GestureDetector(
-              onTap: isPicking ? null : onPick,
-              child: SizedBox(
+              onTap: isPicking
+                  ? null
+                  : isUsingCamera
+                      ? onPickCamera
+                      : onPickGallery,
+              child: Container(
                 width: boxWidth,
-                child: AspectRatio(
-                  aspectRatio: 3 / 4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEAE6DF),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color(0xFFCDC8C0),
-                        width: 1.5,
-                        strokeAlign: BorderSide.strokeAlignInside,
+                height: boxWidth * 3 / 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEAE6DF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      isUsingCamera
+                          ? Icons.camera_alt_outlined
+                          : Icons.photo_library_outlined,
+                      size: 64,
+                      color: Color(0xFF5F8F8A),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Pilih foto dari ${toggleLabel()}',
+                      style: GoogleFonts.quicksand(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF3A3A3A),
                       ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 64,
-                          height: 64,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F6F0),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.08),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.photo_library_outlined,
-                            size: 30,
-                            color: Color(0xFF5F8F8A),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Pilih foto dari galeri',
-                          style: GoogleFonts.quicksand(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF3A3A3A),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: Text(
-                            'Tap untuk membuka galeri',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.quicksand(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF9A9A9A),
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 8),
+                    Text(
+                      isUsingCamera
+                          ? 'Tap untuk membuka kamera'
+                          : 'Tap untuk membuka galeri',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF9A9A9A),
+                        height: 1.5,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -201,7 +291,11 @@ class _UploadView extends StatelessWidget {
               width: double.infinity,
               height: 52,
               child: ElevatedButton.icon(
-                onPressed: isPicking ? null : onPick,
+                onPressed: isPicking
+                    ? null
+                    : isUsingCamera
+                        ? onPickCamera
+                        : onPickGallery,
                 icon: isPicking
                     ? const SizedBox(
                         width: 18,
@@ -209,9 +303,17 @@ class _UploadView extends StatelessWidget {
                         child: CircularProgressIndicator(
                             color: Colors.white, strokeWidth: 2),
                       )
-                    : const Icon(Icons.photo_library_outlined, size: 20),
+                    : Icon(
+                        isUsingCamera
+                            ? Icons.camera_alt_outlined
+                            : Icons.photo_library_outlined,
+                        size: 28),
                 label: Text(
-                  isPicking ? 'Membuka galeri...' : 'Pilih Foto dari Galeri',
+                  isPicking
+                      ? 'Membuka galeri...'
+                      : isUsingCamera
+                          ? 'Pilih dari Kamera'
+                          : 'Pilih dari Galeri',
                   style: GoogleFonts.quicksand(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -452,6 +554,54 @@ class _KetentuanCard extends StatelessWidget {
             );
           }),
         ],
+      ),
+    );
+  }
+}
+
+class _SourceButton extends StatelessWidget {
+  const _SourceButton({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        height: 44,
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFF5F8F8A) : Colors.transparent,
+          borderRadius: BorderRadius.circular(9),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: selected ? Colors.white : const Color(0xFF5F8F8A),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: GoogleFonts.quicksand(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: selected ? Colors.white : const Color(0xFF5F8F8A),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

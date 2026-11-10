@@ -19,6 +19,7 @@ id_rsa*
 # data & arsip (dataset 14 MB + dump SQL tidak masuk repo)
 data/
 *.sql
+!infra/postgres/init.sql
 *.zip
 
 # logs

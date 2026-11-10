@@ -1,18 +1,17 @@
-// create-user.dto.ts
 import {
+  Equals,
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
-  Equals,
-  IsBoolean,
 } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
+  @MaxLength(50)
   username: string;
 
   @IsEmail()
@@ -20,6 +19,7 @@ export class CreateUserDto {
 
   @IsString()
   @MinLength(8)
+  @MaxLength(128)
   password: string;
 
   @IsBoolean()
