@@ -20,4 +20,5 @@ class AppAssets {
   static const String artikelDysgraphia  = 'assets/images/artikel_dysgraphia.png';
   static const String artikelDyscalculia = 'assets/images/artikel_dyscalculia.png';
   static const String artikelPolaAsuh    = 'assets/images/artikel_pola_asuh.png';
+  static const String artikelDetailDisleksia = 'assets/images/artikel_detail_disleksia.png';
 }
