@@ -26,4 +26,5 @@ class AppConstants {
   static const String routeArtikel                    = '/artikel';
   static const String routeArtikelDetail              = '/artikel-detail';
   static const String routeTreatment                  = '/treatment';
+  static const String routeTreatmentDiskalkulia        = '/treatment-diskalkulia';
 }
