@@ -25,4 +25,5 @@ class AppConstants {
   static const String routeHasilAssessment            = '/hasil-assessment';
   static const String routeArtikel                    = '/artikel';
   static const String routeArtikelDetail              = '/artikel-detail';
+  static const String routeTreatment                  = '/treatment';
 }
