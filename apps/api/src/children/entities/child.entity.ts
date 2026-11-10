@@ -42,7 +42,10 @@ export class Child {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
+  // Catatan: tipe union `User | null` disengaja. Emit `design:type` untuk union
+  // adalah Object, bukan referensi kelas — mencegah TDZ crash karena siklus
+  // import ESM antar entity (user.entity <-> child.entity).
   @ManyToOne(() => User, (user) => user.children, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: User | null;
 }

@@ -15,8 +15,17 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return API info', () => {
+      const info = appController.getRoot();
+
+      expect(info.name).toBe('KAWANTUMBUH API');
+      expect(info.version).toBe('1.0.0');
+    });
+  });
+
+  describe('health', () => {
+    it('should return ok status', () => {
+      expect(appController.getHealth().status).toBe('ok');
     });
   });
 });

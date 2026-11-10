@@ -26,6 +26,7 @@ infra             docker-compose, nginx, script deploy
 docs/instrumen    definisi item & aturan skor per modul
 docs/api          openapi.yaml (kontrak API)
 docs/laporan      satu laporan per mata kuliah
+docs/arsitektur.md  desain arsitektur sistem (topologi, komponen, alur, deployment)
 tests             e2e (Playwright), load (k6), fixtures
 scripts           seed, backup, utilitas
 ```

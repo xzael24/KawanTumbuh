@@ -1,19 +1,19 @@
 import {
+  Equals,
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
-  IsNotEmpty,
   MaxLength,
-  IsEmail,
   MinLength,
-  IsBoolean,
-  Equals,
 } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
+  @MaxLength(50)
   username?: string;
 
   @IsOptional()
@@ -23,6 +23,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   @MinLength(8)
+  @MaxLength(128)
   password?: string;
 
   @IsOptional()
