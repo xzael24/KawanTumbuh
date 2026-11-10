@@ -19,6 +19,7 @@ id_rsa*
 # data & arsip (dataset 14 MB + dump SQL tidak masuk repo)
 data/
 *.sql
+!infra/postgres/init.sql
 *.zip
 
 # logs
@@ -30,3 +31,7 @@ hs_err_pid*
 .idea/
 .DS_Store
 Thumbs.db
+
+# opencode lokal (konfigurasi pribadi, jangan di-commit)
+opencode.json
+opencode.jsonc

@@ -108,7 +108,7 @@ class _AssessmentDyscalculiaScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F6F0),
+      backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
