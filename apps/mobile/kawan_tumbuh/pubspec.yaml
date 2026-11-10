@@ -81,6 +81,18 @@ flutter:
     - assets/images/artikel_dysgraphia.png
     - assets/images/artikel_dyscalculia.png
     - assets/images/artikel_pola_asuh.png
+    - assets/images/banner_hero.png
+    - assets/images/therapy_dyslexia.png
+    - assets/images/therapy_dysgraphia.png
+    - assets/images/therapy_dyscalculia.png
+    - assets/images/artikel_banner_sld.png
+    - assets/images/activity_dyscalculia.png
+    - assets/images/ic_home.png
+    - assets/images/ic_notification.png
+    - assets/images/ic_profile.png
+    - assets/images/ic_artikel.png
+    - assets/images/ic_treatment.png
+    - assets/images/ic_chatbot.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
