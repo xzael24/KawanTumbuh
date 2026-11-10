@@ -7,6 +7,10 @@ import os
 
 app = FastAPI(title="KAWANTUMBUH - Dyslexia Audio Screener")
 
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "dyslexia"}
+
 @app.post("/analyze/audio")
 async def analyze_dyslexia(
     audio: UploadFile = File(...),

@@ -337,6 +337,7 @@ def run_cli(image_path):
 def run_gui():
     import tkinter as tk
     from tkinter import ttk, filedialog, messagebox
+    from PIL import ImageTk
     
     root = tk.Tk()
     root.title("Dysgraphia Handwriting Analyzer")
