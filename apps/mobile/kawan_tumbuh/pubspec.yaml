@@ -83,6 +83,16 @@ flutter:
     - assets/images/artikel_dyscalculia.png
     - assets/images/artikel_pola_asuh.png
     - assets/images/artikel_detail_disleksia.png
+    - assets/images/treatment_girl_reading.png
+    - assets/images/treatment_boy_magnifier.png
+    - assets/images/treatment_boy_magnifier2.png
+    - assets/images/sesi_1_huruf_bunyi.png
+    - assets/images/sesi_2_bedakan_huruf.png
+    - assets/images/sesi_3_suku_kata.png
+    - assets/images/sesi_4_membaca_kata.png
+    - assets/images/sesi_5_mendengar.png
+    - assets/images/sesi_6_kalimat_pendek.png
+    - assets/images/sesi_7_membaca_memahami.png
     - assets/images/banner_hero.png
     - assets/images/therapy_dyslexia.png
     - assets/images/therapy_dysgraphia.png
