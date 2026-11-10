@@ -19,7 +19,7 @@ import 'screens/apresiasi_dysgraphia_screen.dart';
 import 'screens/hasil_assessment_screen.dart';
 import 'screens/artikel_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/treatment_dyscalculia_screen.dart';
+import 'screens/disleksia_treatment_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -67,7 +67,7 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeApresiasiDysgraphia:          (context) => const ApresiasiDysgraphiaScreen(),
         AppConstants.routeHasilAssessment:              (context) => const HasilAssessmentScreen(),
         AppConstants.routeArtikel:                       (context) => const ArtikelScreen(),
-        AppConstants.routeTreatmentDyscalculia:          (context) => const TreatmentDyscalculiaScreen(),
+        AppConstants.routeTreatment:                     (context) => const DisleksiaTreatmentScreen(),
       },
     );
   }

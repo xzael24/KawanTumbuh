@@ -489,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   setState(() => _selectedIndex = index);
                   if (index == 1) {
-                    Navigator.pushNamed(context, '/treatment-dyscalculia');
+                    Navigator.pushNamed(context, '/treatment');
                   } else if (index == 2) {
                     Navigator.pushNamed(context, '/artikel');
                   }

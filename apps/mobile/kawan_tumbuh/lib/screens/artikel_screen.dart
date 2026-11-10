@@ -457,6 +457,8 @@ class _BottomNavBar extends StatelessWidget {
                 onTap: () {
                   if (index == 0) {
                     Navigator.pushReplacementNamed(context, '/home');
+                  } else if (index == 1) {
+                    Navigator.pushReplacementNamed(context, '/treatment');
                   }
                 },
                 child: Padding(
