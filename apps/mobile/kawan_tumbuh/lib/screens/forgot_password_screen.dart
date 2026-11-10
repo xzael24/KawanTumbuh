@@ -171,8 +171,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +237,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 40),
 
               // ── Tombol Verifikasi ────────────────────────────────────
               _PrimaryButton(
@@ -396,7 +398,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     setState(() => _obscureConfirm = !_obscureConfirm),
               ),
 
-              const SizedBox(height: 280),
+              const SizedBox(height: 40),
 
               // ── Tombol Kirim ─────────────────────────────────────────
               _PrimaryButton(label: 'Kirim', onPressed: _onKirim),
@@ -419,7 +421,7 @@ class ResetPasswordSuccessScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,7 +465,7 @@ class ResetPasswordSuccessScreen extends StatelessWidget {
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 40),
 
               // ── Tombol Kembali ke Login ──────────────────────────────
               _PrimaryButton(

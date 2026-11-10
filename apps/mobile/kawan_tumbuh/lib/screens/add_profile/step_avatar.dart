@@ -44,77 +44,85 @@ class _StepAvatarState extends State<StepAvatar> {
   @override
   Widget build(BuildContext context) {
     final r = Responsive.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StepHeader(
-            step: widget.step,
-            totalSteps: widget.totalSteps,
-            onBack: widget.onBack,
-          ),
-          SizedBox(height: r.h(36)),
-          const Center(child: StepTitle()),
-          const Spacer(),
-          Center(
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+                horizontal: r.w(24), vertical: r.h(20)),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Tambah Foto',
-                  style: AppTextStyles.inter(r.sp(14), FontWeight.w700, AppColors.textDark),
+                StepHeader(
+                  step: widget.step,
+                  totalSteps: widget.totalSteps,
+                  onBack: widget.onBack,
                 ),
-                SizedBox(height: r.h(16)),
-                GestureDetector(
-                  onTap: _onPickPhoto,
-                  child: Container(
-                    width: r.r(130),
-                    height: r.r(130),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.all(color: AppColors.pink, width: 2),
-                    ),
-                    child: _photoPath != null
-                        ? ClipOval(
-                            child: Image.asset(
-                              _photoPath!,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.camera_alt_outlined,
-                                color: AppColors.pink,
-                                size: r.r(36),
-                              ),
-                              SizedBox(height: r.h(6)),
-                              Text(
-                                'ADD PHOTO',
-                                style: AppTextStyles.inter(
-                                  r.sp(10),
-                                  FontWeight.w700,
-                                  AppColors.pink,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ],
+                SizedBox(height: r.h(36)),
+                const Center(child: StepTitle()),
+                SizedBox(height: r.h(40)),
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Tambah Foto',
+                        style: AppTextStyles.inter(
+                            r.sp(14), FontWeight.w700, AppColors.textDark),
+                      ),
+                      SizedBox(height: r.h(16)),
+                      GestureDetector(
+                        onTap: _onPickPhoto,
+                        child: Container(
+                          width: r.r(130),
+                          height: r.r(130),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            border: Border.all(color: AppColors.pink, width: 2),
                           ),
+                          child: _photoPath != null
+                              ? ClipOval(
+                                  child: Image.asset(
+                                    _photoPath!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: AppColors.pink,
+                                      size: r.r(36),
+                                    ),
+                                    SizedBox(height: r.h(6)),
+                                    Text(
+                                      'ADD PHOTO',
+                                      style: AppTextStyles.inter(
+                                        r.sp(10),
+                                        FontWeight.w700,
+                                        AppColors.pink,
+                                        letterSpacing: 0.8,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                SizedBox(height: r.h(40)),
+                PrimaryButton(
+                  label: 'Selesai',
+                  onPressed: () => widget.onFinish(_photoPath),
+                ),
+                SizedBox(height: r.h(32)),
               ],
             ),
           ),
-          const Spacer(),
-          PrimaryButton(
-            label: 'Selesai',
-            onPressed: () => widget.onFinish(_photoPath),
-          ),
-          SizedBox(height: r.h(32)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

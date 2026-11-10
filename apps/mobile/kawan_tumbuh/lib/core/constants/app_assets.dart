@@ -13,4 +13,11 @@ class AppAssets {
 
   // — Assessment —
   static const String assessmentIllustration = 'assets/images/assesment_ikhtisar.png';
+
+  // — Artikel —
+  static const String artikelBanner      = 'assets/images/artikel_banner.png';
+  static const String artikelDyslexia    = 'assets/images/artikel_dyslexia.png';
+  static const String artikelDysgraphia  = 'assets/images/artikel_dysgraphia.png';
+  static const String artikelDyscalculia = 'assets/images/artikel_dyscalculia.png';
+  static const String artikelPolaAsuh    = 'assets/images/artikel_pola_asuh.png';
 }

@@ -47,52 +47,63 @@ class _StepClassState extends State<StepClass> {
   @override
   Widget build(BuildContext context) {
     final r = Responsive.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StepHeader(
-            step: widget.step,
-            totalSteps: widget.totalSteps,
-            onBack: widget.onBack,
-          ),
-          SizedBox(height: r.h(36)),
-          const Center(child: StepTitle()),
-          SizedBox(height: r.h(32)),
-          Text('Kelas Anak',
-              style: AppTextStyles.inter(r.sp(14), FontWeight.w600, AppColors.textDark)),
-          SizedBox(height: r.h(16)),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: r.h(12),
-              crossAxisSpacing: r.w(12),
-              // tinggi card proporsional terhadap lebar
-              childAspectRatio: (((MediaQuery.of(context).size.width - r.w(48) - r.w(12)) / 2) / r.h(52)),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+                horizontal: r.w(24), vertical: r.h(20)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StepHeader(
+                  step: widget.step,
+                  totalSteps: widget.totalSteps,
+                  onBack: widget.onBack,
+                ),
+                SizedBox(height: r.h(36)),
+                const Center(child: StepTitle()),
+                SizedBox(height: r.h(32)),
+                Text('Kelas Anak',
+                    style: AppTextStyles.inter(
+                        r.sp(14), FontWeight.w600, AppColors.textDark)),
+                SizedBox(height: r.h(16)),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: r.h(12),
+                    crossAxisSpacing: r.w(12),
+                    childAspectRatio: (((MediaQuery.of(context).size.width -
+                                r.w(48) -
+                                r.w(12)) /
+                            2) /
+                        r.h(52)),
+                  ),
+                  itemCount: _kelasList.length,
+                  itemBuilder: (context, index) {
+                    final kelas = _kelasList[index];
+                    final isSelected = _selected == kelas;
+                    return _ClassCard(
+                      label: kelas,
+                      selected: isSelected,
+                      onTap: () => setState(() => _selected = kelas),
+                    );
+                  },
+                ),
+                SizedBox(height: r.h(32)),
+                PrimaryButton(
+                  label: 'Simpan & Lanjut',
+                  enabled: _selected.isNotEmpty,
+                  onPressed: () => widget.onNext(_selected),
+                ),
+                SizedBox(height: r.h(32)),
+              ],
             ),
-            itemCount: _kelasList.length,
-            itemBuilder: (context, index) {
-              final kelas = _kelasList[index];
-              final isSelected = _selected == kelas;
-              return _ClassCard(
-                label: kelas,
-                selected: isSelected,
-                onTap: () => setState(() => _selected = kelas),
-              );
-            },
           ),
-          const Spacer(),
-          PrimaryButton(
-            label: 'Simpan & Lanjut',
-            enabled: _selected.isNotEmpty,
-            onPressed: () => widget.onNext(_selected),
-          ),
-          SizedBox(height: r.h(32)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

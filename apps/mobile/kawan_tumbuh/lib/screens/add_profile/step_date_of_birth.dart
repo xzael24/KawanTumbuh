@@ -69,38 +69,47 @@ class _StepDateOfBirthState extends State<StepDateOfBirth> {
   @override
   Widget build(BuildContext context) {
     final r = Responsive.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StepHeader(
-            step: widget.step,
-            totalSteps: widget.totalSteps,
-            onBack: widget.onBack,
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+                horizontal: r.w(24), vertical: r.h(20)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StepHeader(
+                  step: widget.step,
+                  totalSteps: widget.totalSteps,
+                  onBack: widget.onBack,
+                ),
+                SizedBox(height: r.h(36)),
+                const Center(child: StepTitle()),
+                SizedBox(height: r.h(28)),
+                _InlineCalendar(
+                  displayMonth: _displayMonth,
+                  selected: _selected,
+                  dayLabels: _dayLabels,
+                  monthNames: _monthNames,
+                  onPrevMonth: _prevMonth,
+                  onNextMonth: _nextMonth,
+                  onSelectDay: (day) => setState(() => _selected = day),
+                  onYearChanged: _changeYear,
+                ),
+                SizedBox(height: r.h(28)),
+              ],
+            ),
           ),
-          SizedBox(height: r.h(36)),
-          const Center(child: StepTitle()),
-          SizedBox(height: r.h(28)),
-          _InlineCalendar(
-            displayMonth: _displayMonth,
-            selected: _selected,
-            dayLabels: _dayLabels,
-            monthNames: _monthNames,
-            onPrevMonth: _prevMonth,
-            onNextMonth: _nextMonth,
-            onSelectDay: (day) => setState(() => _selected = day),
-            onYearChanged: _changeYear,
-          ),
-          const Spacer(),
-          PrimaryButton(
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(r.w(24), 0, r.w(24), r.h(32)),
+          child: PrimaryButton(
             label: 'Simpan & Lanjut',
             enabled: _selected != null,
             onPressed: () => widget.onNext(_selected!),
           ),
-          SizedBox(height: r.h(32)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
