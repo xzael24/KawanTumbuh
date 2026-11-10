@@ -16,7 +16,7 @@ class ApresiasiDyslexiaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F6F0),
+      backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
         child: Column(
           children: [
@@ -26,14 +26,15 @@ class ApresiasiDyslexiaScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // ── Ilustrasi ────────────────────────────────
-                  Image.asset(
-                    'assets/images/apresiasi_kids.png',
-                    width: 280,
-                    fit: BoxFit.contain,
-                    errorBuilder: (ctx, err, stack) => const Icon(
-                      Icons.emoji_events_rounded,
-                      size: 120,
-                      color: Color(0xFF5F8F8A),
+                  Flexible(
+                    child: Image.asset(
+                      'assets/images/apresiasi_kids.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, err, stack) => const Icon(
+                        Icons.emoji_events_rounded,
+                        size: 120,
+                        color: Color(0xFF5F8F8A),
+                      ),
                     ),
                   ),
 

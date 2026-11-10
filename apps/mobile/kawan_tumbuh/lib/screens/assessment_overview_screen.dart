@@ -24,7 +24,7 @@ class _AssessmentOverviewScreenState extends State<AssessmentOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F6F0),
+      backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
         child: Column(
           children: [
@@ -398,7 +398,7 @@ class _BottomButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9F6F0),
+        color: const Color(0xFFFAF7F2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),

@@ -14,12 +14,16 @@ import 'screens/apresiasi_screen.dart';
 import 'screens/apresiasi_dyslexia_screen.dart';
 import 'screens/assessment_dyslexia_screen.dart';
 import 'screens/assessment_dysgraphia_intro_screen.dart';
+import 'screens/camera_capture_screen.dart';
+import 'screens/apresiasi_dysgraphia_screen.dart';
+import 'screens/hasil_assessment_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  GoogleFonts.config.allowRuntimeFetching = false;
+  // TODO: set ke false setelah font Quicksand di-bundle ke assets/fonts/
+  GoogleFonts.config.allowRuntimeFetching = true;
 
   runApp(const KawanTumbuhApp());
 }
@@ -56,6 +60,9 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeAssessmentDyslexia:    (context) => const AssessmentDyslexiaScreen(),
         AppConstants.routeApresiasiDyslexia:          (context) => const ApresiasiDyslexiaScreen(),
         AppConstants.routeAssessmentDysgraphiaIntro:  (context) => const AssessmentDysgraphiaIntroScreen(),
+        AppConstants.routeDysgraphiaCamera:            (context) => const CameraCaptureScreen(),
+        AppConstants.routeApresiasiDysgraphia:          (context) => const ApresiasiDysgraphiaScreen(),
+        AppConstants.routeHasilAssessment:              (context) => const HasilAssessmentScreen(),
       },
     );
   }
