@@ -1,0 +1,6 @@
+{
+  // Konfigurasi OpenCode untuk monorepo KAWANTUMBUH.
+  // Saat ini sengaja dibiarkan default: tanpa provider 9Router, tanpa model Gemini.
+  // Pakai /connect dan /models di OpenCode untuk memilih provider/model resmi.
+  "$schema": "https://opencode.ai/config.json"
+}
