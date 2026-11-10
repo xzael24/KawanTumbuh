@@ -39,51 +39,60 @@ class _StepGenderState extends State<StepGender> {
   @override
   Widget build(BuildContext context) {
     final r = Responsive.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: r.w(24), vertical: r.h(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StepHeader(
-            step: widget.step,
-            totalSteps: widget.totalSteps,
-            onBack: widget.onBack,
-          ),
-          SizedBox(height: r.h(36)),
-          const Center(child: StepTitle()),
-          const Spacer(),
-          Text('Gender', style: AppTextStyles.inter(r.sp(14), FontWeight.w600, AppColors.textDark)),
-          SizedBox(height: r.h(16)),
-          Row(
-            children: [
-              Expanded(
-                child: GenderCard(
-                  label: 'Laki-laki',
-                  assetPath: AppAssets.avatarBoy,
-                  selected: _selected == 'laki-laki',
-                  onTap: () => setState(() => _selected = 'laki-laki'),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+                horizontal: r.w(24), vertical: r.h(20)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StepHeader(
+                  step: widget.step,
+                  totalSteps: widget.totalSteps,
+                  onBack: widget.onBack,
                 ),
-              ),
-              SizedBox(width: r.w(16)),
-              Expanded(
-                child: GenderCard(
-                  label: 'Perempuan',
-                  assetPath: AppAssets.avatarGirl,
-                  selected: _selected == 'perempuan',
-                  onTap: () => setState(() => _selected = 'perempuan'),
+                SizedBox(height: r.h(36)),
+                const Center(child: StepTitle()),
+                SizedBox(height: r.h(32)),
+                Text('Gender',
+                    style: AppTextStyles.inter(
+                        r.sp(14), FontWeight.w600, AppColors.textDark)),
+                SizedBox(height: r.h(16)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GenderCard(
+                        label: 'Laki-laki',
+                        assetPath: AppAssets.avatarBoy,
+                        selected: _selected == 'laki-laki',
+                        onTap: () => setState(() => _selected = 'laki-laki'),
+                      ),
+                    ),
+                    SizedBox(width: r.w(16)),
+                    Expanded(
+                      child: GenderCard(
+                        label: 'Perempuan',
+                        assetPath: AppAssets.avatarGirl,
+                        selected: _selected == 'perempuan',
+                        onTap: () => setState(() => _selected = 'perempuan'),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: r.h(32)),
+                PrimaryButton(
+                  label: 'Simpan & Lanjut',
+                  enabled: _selected.isNotEmpty,
+                  onPressed: () => widget.onNext(_selected),
+                ),
+                SizedBox(height: r.h(32)),
+              ],
+            ),
           ),
-          SizedBox(height: r.h(32)),
-          PrimaryButton(
-            label: 'Simpan & Lanjut',
-            enabled: _selected.isNotEmpty,
-            onPressed: () => widget.onNext(_selected),
-          ),
-          SizedBox(height: r.h(32)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

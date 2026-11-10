@@ -23,4 +23,6 @@ class AppConstants {
   static const String routeDysgraphiaCamera           = '/dysgraphia-camera';
   static const String routeApresiasiDysgraphia        = '/apresiasi-dysgraphia';
   static const String routeHasilAssessment            = '/hasil-assessment';
+  static const String routeArtikel                    = '/artikel';
+  static const String routeArtikelDetail              = '/artikel-detail';
 }

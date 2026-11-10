@@ -40,6 +40,7 @@ dependencies:
   path_provider: ^2.1.0
   path: ^1.9.0
   image_picker: ^1.1.2
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,11 @@ flutter:
     - assets/images/apresiasi_kids.png
     - assets/images/alarm_clock.png
     - assets/images/hasil_assessment.png
+    - assets/images/artikel_banner.png
+    - assets/images/artikel_dyslexia.png
+    - assets/images/artikel_dysgraphia.png
+    - assets/images/artikel_dyscalculia.png
+    - assets/images/artikel_pola_asuh.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
