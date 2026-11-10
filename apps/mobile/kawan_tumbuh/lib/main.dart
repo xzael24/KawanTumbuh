@@ -18,6 +18,7 @@ import 'screens/camera_capture_screen.dart';
 import 'screens/apresiasi_dysgraphia_screen.dart';
 import 'screens/hasil_assessment_screen.dart';
 import 'screens/artikel_screen.dart';
+import 'screens/home_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -48,7 +49,7 @@ class KawanTumbuhApp extends StatelessWidget {
       // Daftarkan route untuk halaman berikutnya
       routes: {
         AppConstants.routeOnboarding : (context) => const OnboardingScreen(),
-        AppConstants.routeHome       : (context) => const PlaceholderHomePage(),
+        AppConstants.routeHome       : (context) => const HomeScreen(),
         AppConstants.routeLogin      : (context) => const LoginScreen(),
         AppConstants.routeRegister   : (context) => const RegisterScreen(),
         AppConstants.routeForgotPass : (context) => const ForgotPasswordScreen(),
