@@ -9,21 +9,30 @@ final List<ArtikelModel> dummyArtikel = [
     kategori: ArtikelKategori.disleksia,
     tanggal: DateTime(2026, 11, 12),
     imagePath: AppAssets.artikelDyslexia,
+    detailImagePath: AppAssets.artikelDetailDisleksia,
+    intro:
+        'Melatih Anak Membaca Di Rumah Tidak Harus Kaku Atau Membosankan. '
+        'Berikut Adalah Beberapa Cara Efektif, Praktis, Dan Menyenangkan Yang Dapat '
+        'Diterapkan Sehari Buat Untuk Membangun Kelancaran Serta Minat Baca Anak:',
+    poinPoin: [
+      'Membangun Kesadaran Huruf & Bunyi',
+      'Kegiatan Membaca Bersama (Shared Reading)',
+      'Menciptakan Lingkungan Kaya Teks',
+      'Permainan Kata Yang Menyenangkan',
+    ],
     isi:
         'Membaca adalah keterampilan dasar yang sangat penting bagi perkembangan anak. '
         'Bagi anak dengan disleksia, proses belajar membaca bisa menjadi tantangan tersendiri. '
         'Namun dengan pendekatan yang tepat dan konsisten, orang tua dapat membantu anak '
         'mengembangkan kemampuan membaca di rumah.\n\n'
-        '1. Gunakan kartu huruf berwarna-warni\n'
+        '1. Membangun Kesadaran Huruf & Bunyi\n'
         'Kartu huruf membantu anak mengenali bentuk huruf secara visual dan taktil.\n\n'
-        '2. Baca bersama setiap hari\n'
+        '2. Kegiatan Membaca Bersama (Shared Reading)\n'
         'Luangkan 15–20 menit setiap hari untuk membaca buku bergambar bersama.\n\n'
-        '3. Gunakan aplikasi membaca interaktif\n'
-        'Teknologi dapat membantu pembelajaran yang menyenangkan.\n\n'
-        '4. Berikan pujian dan apresiasi\n'
-        'Setiap kemajuan kecil perlu dirayakan untuk menjaga motivasi anak.\n\n'
-        '5. Konsultasi dengan terapis\n'
-        'Jika kesulitan berlanjut, segera konsultasikan dengan terapis bicara atau pendidikan khusus.',
+        '3. Menciptakan Lingkungan Kaya Teks\n'
+        'Tempel label nama benda-benda di rumah agar anak terbiasa melihat tulisan.\n\n'
+        '4. Permainan Kata Yang Menyenangkan\n'
+        'Gunakan permainan tebak kata, puzzle huruf, atau aplikasi membaca interaktif.',
   ),
   ArtikelModel(
     id: '2',
@@ -31,16 +40,21 @@ final List<ArtikelModel> dummyArtikel = [
     kategori: ArtikelKategori.disgrafia,
     tanggal: DateTime(2026, 11, 12),
     imagePath: AppAssets.artikelDysgraphia,
+    detailImagePath: AppAssets.artikelDetailDisleksia,
+    intro:
+        'Disgrafia adalah kesulitan belajar yang mempengaruhi kemampuan menulis. '
+        'Latihan motorik halus secara rutin dapat membantu anak mengatasi tantangan ini '
+        'dan meningkatkan kemampuan menulis mereka secara bertahap:',
+    poinPoin: [
+      'Mewarnai dalam batas garis',
+      'Memotong kertas dengan gunting',
+      'Merangkai manik-manik',
+      'Bermain lilin atau tanah liat',
+    ],
     isi:
         'Disgrafia adalah kesulitan belajar yang mempengaruhi kemampuan menulis. '
         'Latihan motorik halus secara rutin dapat membantu anak mengatasi tantangan ini.\n\n'
-        'Aktivitas yang dapat dilakukan:\n\n'
-        '• Mewarnai dalam batas garis\n'
-        '• Memotong kertas dengan gunting\n'
-        '• Merangkai manik-manik\n'
-        '• Bermain lilin atau tanah liat\n'
-        '• Latihan menelusuri pola titik-titik\n\n'
-        'Lakukan latihan ini secara konsisten 10–15 menit setiap hari.',
+        'Lakukan latihan ini secara konsisten 10–15 menit setiap hari untuk hasil terbaik.',
   ),
   ArtikelModel(
     id: '3',
@@ -48,16 +62,20 @@ final List<ArtikelModel> dummyArtikel = [
     kategori: ArtikelKategori.diskalkulia,
     tanggal: DateTime(2026, 11, 12),
     imagePath: AppAssets.artikelDyscalculia,
+    detailImagePath: AppAssets.artikelDetailDisleksia,
+    intro:
+        'Diskalkulia membuat anak kesulitan memahami konsep angka dan matematika. '
+        'Namun belajar bisa tetap menyenangkan dengan pendekatan yang kreatif dan '
+        'menggunakan benda-benda di sekitar anak:',
+    poinPoin: [
+      'Gunakan benda nyata seperti buah atau kelereng',
+      'Nyanyikan lagu berhitung bersama',
+      'Gunakan permainan papan sederhana',
+      'Hitung benda-benda di sekitar rumah',
+    ],
     isi:
         'Diskalkulia membuat anak kesulitan memahami konsep angka dan matematika. '
-        'Namun belajar bisa tetap menyenangkan dengan pendekatan yang kreatif.\n\n'
-        'Tips mengenalkan angka:\n\n'
-        '• Gunakan benda nyata seperti buah, kelereng, atau mainan\n'
-        '• Nyanyikan lagu berhitung bersama\n'
-        '• Gunakan permainan papan sederhana\n'
-        '• Buat aktivitas memasak bersama dengan takaran\n'
-        '• Hitung benda-benda di sekitar rumah\n\n'
-        'Kunci utamanya adalah kesabaran dan konsistensi.',
+        'Kunci utamanya adalah kesabaran dan konsistensi dalam menerapkan metode belajar.',
   ),
   ArtikelModel(
     id: '4',
@@ -65,16 +83,19 @@ final List<ArtikelModel> dummyArtikel = [
     kategori: ArtikelKategori.polaAsuh,
     tanggal: DateTime(2026, 11, 12),
     imagePath: AppAssets.artikelPolaAsuh,
-    isi:
+    detailImagePath: AppAssets.artikelDetailDisleksia,
+    intro:
         'Dukungan orang tua adalah faktor terpenting dalam keberhasilan terapi anak. '
         'Penelitian menunjukkan bahwa anak-anak yang mendapat dukungan penuh dari orang tua '
-        'menunjukkan kemajuan yang lebih signifikan dalam terapi.\n\n'
-        'Bagaimana orang tua bisa mendukung:\n\n'
-        '• Hadir dan aktif dalam sesi terapi\n'
-        '• Terapkan saran terapis di rumah\n'
-        '• Jaga komunikasi positif dengan anak\n'
-        '• Bergabung dalam komunitas orang tua\n'
-        '• Jaga kesehatan mental diri sendiri\n\n'
+        'menunjukkan kemajuan yang lebih signifikan. Berikut cara mendukung anak:',
+    poinPoin: [
+      'Hadir dan aktif dalam sesi terapi',
+      'Terapkan saran terapis di rumah',
+      'Jaga komunikasi positif dengan anak',
+      'Bergabung dalam komunitas orang tua',
+    ],
+    isi:
+        'Dukungan orang tua adalah faktor terpenting dalam keberhasilan terapi anak. '
         'Ingat, Anda tidak sendirian dalam perjalanan ini.',
   ),
 ];

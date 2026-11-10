@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Kategori artikel yang tersedia.
 enum ArtikelKategori { semua, polaAsuh, disgrafia, disleksia, diskalkulia }
 
@@ -26,6 +28,9 @@ class ArtikelModel {
     required this.kategori,
     required this.tanggal,
     required this.imagePath,
+    required this.detailImagePath,
+    required this.intro,
+    required this.poinPoin,
     required this.isi,
   });
 
@@ -33,6 +38,44 @@ class ArtikelModel {
   final String judul;
   final ArtikelKategori kategori;
   final DateTime tanggal;
+
+  /// Gambar thumbnail di list
   final String imagePath;
+
+  /// Gambar ilustrasi besar di halaman detail
+  final String detailImagePath;
+
+  /// Paragraf pembuka di halaman detail
+  final String intro;
+
+  /// Poin-poin bernomor di halaman detail
+  final List<String> poinPoin;
+
+  /// Isi lengkap artikel (halaman selengkapnya)
   final String isi;
+
+  /// Format tanggal ke "12 November 2026" tanpa intl locale
+  String get tanggalFormatted {
+    const bulan = [
+      '', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    ];
+    return '${tanggal.day} ${bulan[tanggal.month]} ${tanggal.year}';
+  }
+
+  /// Warna badge kategori
+  Color get badgeColor {
+    switch (kategori) {
+      case ArtikelKategori.disleksia:
+        return const Color(0xFF5F8F8A);
+      case ArtikelKategori.disgrafia:
+        return const Color(0xFFE8A838);
+      case ArtikelKategori.diskalkulia:
+        return const Color(0xFFF57568);
+      case ArtikelKategori.polaAsuh:
+        return const Color(0xFFF88D96);
+      case ArtikelKategori.semua:
+        return const Color(0xFF5F8F8A);
+    }
+  }
 }
