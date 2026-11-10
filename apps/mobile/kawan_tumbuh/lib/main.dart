@@ -20,6 +20,7 @@ import 'screens/hasil_assessment_screen.dart';
 import 'screens/artikel_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/disleksia_treatment_screen.dart';
+import 'screens/diskalkulia_treatment_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -68,6 +69,7 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeHasilAssessment:              (context) => const HasilAssessmentScreen(),
         AppConstants.routeArtikel:                       (context) => const ArtikelScreen(),
         AppConstants.routeTreatment:                     (context) => const DisleksiaTreatmentScreen(),
+        AppConstants.routeTreatmentDiskalkulia:           (context) => const DiskalkuliaTreatmentScreen(),
       },
     );
   }

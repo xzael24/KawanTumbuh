@@ -36,4 +36,15 @@ class AppAssets {
   static const String sesi5Mendengar         = 'assets/images/sesi_5_mendengar.png';
   static const String sesi6KalimatPendek     = 'assets/images/sesi_6_kalimat_pendek.png';
   static const String sesi7MembacaMemahami   = 'assets/images/sesi_7_membaca_memahami.png';
+
+  // — Treatment: Diskalkulia (placeholder — ganti gambar sesungguhnya nanti) —
+  static const String progresDiskalkulia       = 'assets/images/progres_diskalkulia.png';
+  static const String evaluasiDiskalkulia      = 'assets/images/evaluasi_diskalkulia.png';
+  static const String sesi1DiskalkuliaAngka    = 'assets/images/sesi_1_diskalkulia_angka.png';
+  static const String sesi2DiskalkuliaJumlah   = 'assets/images/sesi_2_diskalkulia_jumlah.png';
+  static const String sesi3DiskalkuliaPola     = 'assets/images/sesi_3_diskalkulia_pola.png';
+  static const String sesi4DiskalkuliaJumlah   = 'assets/images/sesi_4_diskalkulia_penjumlahan.png';
+  static const String sesi5DiskalkuliaBentuk   = 'assets/images/sesi_5_diskalkulia_bentuk.png';
+  static const String sesi6DiskalkuliaUrut     = 'assets/images/sesi_6_diskalkulia_urut.png';
+  static const String sesi7DiskalkuliaTantang  = 'assets/images/sesi_7_diskalkulia_tantangan.png';
 }
