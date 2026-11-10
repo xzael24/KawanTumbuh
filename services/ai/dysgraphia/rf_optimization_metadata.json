@@ -2,14 +2,14 @@
   "model_name": "Optimized Random Forest Classifier",
   "best_params": {
     "class_weight": "balanced",
-    "criterion": "log_loss",
-    "max_depth": 7,
-    "max_features": null,
+    "criterion": "gini",
+    "max_depth": 9,
+    "max_features": "sqrt",
     "min_samples_leaf": 1,
-    "min_samples_split": 2,
+    "min_samples_split": 6,
     "n_estimators": 150
   },
-  "optimal_decision_threshold": 0.42,
+  "optimal_decision_threshold": 0.45,
   "feature_names": [
     "baseline_dev_std",
     "baseline_waviness",
@@ -36,12 +36,5 @@
     "glcm_homogeneity",
     "glcm_energy",
     "glcm_correlation"
-  ],
-  "cv_performance": {
-    "accuracy": 83.94,
-    "precision": 82.46,
-    "recall": 82.46,
-    "f1_score": 82.46,
-    "roc_auc": 88.94
-  }
+  ]
 }
