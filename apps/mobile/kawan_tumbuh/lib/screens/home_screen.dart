@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'sessions': '7 Sesi',
       'image': 'assets/images/therapy_dyscalculia.png',
       'bgColor': const Color(0xFFF28B6E),
+      'route': '/treatment-diskalkulia',
     },
     {
       'title': 'Disleksia',
@@ -27,7 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
       'sessions': '7 Sesi',
       'image': 'assets/images/therapy_dyslexia.png',
       'bgColor': const Color(0xFF5F8F8A),
+      'route': '/treatment',
     },
+    // Disgrafia: belum ada screen treatment — sengaja tanpa 'route'
+    // sehingga kartunya belum bisa diklik.
     {
       'title': 'Disgrafia',
       'subtitle': 'Treatment',
@@ -242,72 +246,78 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTherapyCard(Map<String, dynamic> card, bool isDark) {
-    return Container(
-      width: 120,
-      decoration: BoxDecoration(
-        color: card['bgColor'] as Color,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Center(
-              child: Image.asset(
-                card['image'] as String,
-                height: 70,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => Container(
+    final String? route = card['route'] as String?;
+    return GestureDetector(
+      // Kartu tanpa route (Disgrafia) sengaja tidak bisa diklik
+      // sampai screen treatment disgrafia tersedia.
+      onTap: route == null ? null : () => Navigator.pushNamed(context, route),
+      child: Container(
+        width: 120,
+        decoration: BoxDecoration(
+          color: card['bgColor'] as Color,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Image.asset(
+                  card['image'] as String,
                   height: 70,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.image_not_supported,
-                    size: 32,
-                    color: Colors.white,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      size: 32,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  card['title'] as String,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : const Color(0xFF1A1A1A),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    card['title'] as String,
+                    style: GoogleFonts.quicksand(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : const Color(0xFF1A1A1A),
+                    ),
                   ),
-                ),
-                Text(
-                  card['subtitle'] as String,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.8)
-                        : const Color(0xFF555555),
+                  Text(
+                    card['subtitle'] as String,
+                    style: GoogleFonts.quicksand(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.8)
+                          : const Color(0xFF555555),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  card['sessions'] as String,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.9)
-                        : const Color(0xFF333333),
+                  const SizedBox(height: 4),
+                  Text(
+                    card['sessions'] as String,
+                    style: GoogleFonts.quicksand(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.9)
+                          : const Color(0xFF333333),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -350,60 +360,63 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ── AKTIVITAS TERAKHIR ────────────────────────────────────────────────
   Widget _buildAktivitasCard() {
-    return Row(
-      children: [
-        Expanded(
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/images/activity_dyscalculia.png',
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/treatment-diskalkulia'),
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    'assets/images/activity_dyscalculia.png',
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF28B6E),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.calculate_rounded,
-                      color: Colors.white,
-                      size: 28,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF28B6E),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.calculate_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Terapi Diskalkulia',
-                    style: GoogleFonts.quicksand(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1A1A1A),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Terapi Diskalkulia',
+                      style: GoogleFonts.quicksand(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFF1A1A1A),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Lihat Terapi',
-                    style: GoogleFonts.quicksand(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF888888),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Lihat Terapi',
+                      style: GoogleFonts.quicksand(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF888888),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
