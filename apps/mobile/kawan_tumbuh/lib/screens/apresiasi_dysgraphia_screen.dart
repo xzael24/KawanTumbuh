@@ -10,7 +10,7 @@ class ApresiasiDysgraphiaScreen extends StatelessWidget {
   const ApresiasiDysgraphiaScreen({super.key});
 
   void _onLanjut(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/hasil-assessment');
+    Navigator.of(context).pushReplacementNamed('/kuesioner-ikhtisar');
   }
 
   @override
@@ -57,7 +57,7 @@ class ApresiasiDysgraphiaScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
-                      'Sesi menulis sudah selesai. Sekarang yuk kita lihat hasil keseluruhan.',
+                      'Sesi menulis sudah selesai. Sekarang yuk isi kuisoner observasi untuk melengkapi data asesmen.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.quicksand(
                         fontSize: 14,

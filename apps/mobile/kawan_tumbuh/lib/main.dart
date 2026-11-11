@@ -21,6 +21,9 @@ import 'screens/artikel_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/disleksia_treatment_screen.dart';
 import 'screens/diskalkulia_treatment_screen.dart';
+import 'screens/kuesioner_ikhtisar_screen.dart';
+import 'screens/kuesioner_screen.dart';
+import 'screens/hasil_kuesioner_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -70,6 +73,9 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeArtikel:                       (context) => const ArtikelScreen(),
         AppConstants.routeTreatment:                     (context) => const DisleksiaTreatmentScreen(),
         AppConstants.routeTreatmentDiskalkulia:           (context) => const DiskalkuliaTreatmentScreen(),
+        AppConstants.routeKuesionerIkhtisar:              (context) => const KuesionerIkhtisarScreen(),
+        AppConstants.routeKuesioner:                      (context) => const KuesionerScreen(),
+        AppConstants.routeHasilKuesioner:                 (context) => const HasilKuesionerScreen(),
       },
     );
   }
