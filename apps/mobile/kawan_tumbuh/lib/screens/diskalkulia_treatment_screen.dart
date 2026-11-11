@@ -4,6 +4,9 @@ import '../core/constants/app_assets.dart';
 import '../core/constants/app_colors.dart';
 import '../core/utils/responsive.dart';
 
+// ─── Status sesi ──────────────────────────────────────────────────────────────
+enum _SesiStatus { selesai, lanjut, terkunci }
+
 // ─── Data model sesi terapi ───────────────────────────────────────────────────
 class _SesiTerapi {
   const _SesiTerapi({
@@ -11,10 +14,24 @@ class _SesiTerapi {
     required this.jumlahSoal,
     required this.bintang,
     required this.imagePath,
+    required this.status,
   });
   final String judul;
   final int jumlahSoal;
-  final int bintang; // 0–3
+  final int bintang;
+  final String imagePath;
+  final _SesiStatus status;
+}
+
+// ─── Data progres per gejala ──────────────────────────────────────────────────
+class _ProgresData {
+  const _ProgresData({
+    required this.selesai,
+    required this.total,
+    required this.imagePath,
+  });
+  final int selesai;
+  final int total;
   final String imagePath;
 }
 
@@ -27,6 +44,11 @@ class _Gejala {
     required this.bgColor,
     required this.strokeColor,
     required this.textColor,
+    required this.sesiList,
+    required this.progres,
+    required this.evaluasiImagePath,
+    required this.skriningTombolLabel,
+    required this.skriningSubtitle,
   });
   final String label;
   final String sublabel;
@@ -34,8 +56,225 @@ class _Gejala {
   final Color bgColor;
   final Color strokeColor;
   final Color textColor;
+  final List<_SesiTerapi> sesiList;
+  final _ProgresData progres;
+  final String evaluasiImagePath;
+  final String skriningTombolLabel;
+  final String skriningSubtitle;
 }
 
+// ─── Data semua gejala ────────────────────────────────────────────────────────
+const _sesiDiskalkulia = [
+  _SesiTerapi(
+    judul: 'Sesi 1: Mengenal Angka',
+    jumlahSoal: 5,
+    bintang: 2,
+    imagePath: AppAssets.sesi1DiskalkuliaAngka,
+    status: _SesiStatus.selesai,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 2: Memahami Jumlah',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi2DiskalkuliaJumlah,
+    status: _SesiStatus.lanjut,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 3: Mengenal Pola Bilangan',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi3DiskalkuliaPola,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 4: Belajar Penjumlahan',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi4DiskalkuliaJumlah,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 5: Mengenal Bentuk dan Ukuran',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi5DiskalkuliaBentuk,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 6: Mengurutkan dan Membandingkan',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi6DiskalkuliaUrut,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 7: Tantangan Berhitung',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi7DiskalkuliaTantang,
+    status: _SesiStatus.terkunci,
+  ),
+];
+
+const _sesiDisleksia = [
+  _SesiTerapi(
+    judul: 'Sesi 1: Mengenal Huruf dan Bunyi',
+    jumlahSoal: 5,
+    bintang: 3,
+    imagePath: AppAssets.sesi2BedakanHuruf,
+    status: _SesiStatus.selesai,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 2: Membedakan Huruf',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi3SukuKata,
+    status: _SesiStatus.lanjut,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 3: Mengenal Suku Kata',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi4MembacaKata,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 4: Membaca Kata',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi5Mendengar,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 5: Mendengar & Menirukan',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi6KalimatPendek,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 6: Membaca Kalimat Pendek',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.sesi7MembacaMemahami,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 7: Membaca dan Memahami',
+    jumlahSoal: 5,
+    bintang: 0,
+    imagePath: AppAssets.treatmentBoyMagnifier,
+    status: _SesiStatus.terkunci,
+  ),
+];
+
+const _sesiDisgrafia = [
+  _SesiTerapi(
+    judul: 'Sesi 1: Melatih Gerakan Tangan',
+    jumlahSoal: 10,
+    bintang: 3,
+    imagePath: AppAssets.sesi1Disgrafia,
+    status: _SesiStatus.selesai,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 2: Menghubungkan Titik',
+    jumlahSoal: 10,
+    bintang: 0,
+    imagePath: AppAssets.sesi2Disgrafia,
+    status: _SesiStatus.lanjut,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 3: Membentuk Pola & Bentuk',
+    jumlahSoal: 10,
+    bintang: 0,
+    imagePath: AppAssets.sesi3SukuKata,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 4: Mengenal Bentuk Huruf',
+    jumlahSoal: 10,
+    bintang: 0,
+    imagePath: AppAssets.sesi4MembacaKata,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 5: Menulis Huruf',
+    jumlahSoal: 10,
+    bintang: 0,
+    imagePath: AppAssets.sesi5Mendengar,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 6: Menulis Kata Sederhana',
+    jumlahSoal: 10,
+    bintang: 0,
+    imagePath: AppAssets.sesi6KalimatPendek,
+    status: _SesiStatus.terkunci,
+  ),
+  _SesiTerapi(
+    judul: 'Sesi 7: Tantangan Menulis',
+    jumlahSoal: 10,
+    bintang: 0,
+    imagePath: AppAssets.sesi7MembacaMemahami,
+    status: _SesiStatus.terkunci,
+  ),
+];
+
+const _gejalaList = [
+  _Gejala(
+    label: 'Diskalkulia',
+    sublabel: 'Resiko Tinggi',
+    imagePath: AppAssets.therapyDyscalculia,
+    bgColor: Color(0xFFF57568),
+    strokeColor: Color(0xFFD83B2B),
+    textColor: Colors.white,
+    sesiList: _sesiDiskalkulia,
+    progres: _ProgresData(
+      selesai: 2,
+      total: 7,
+      imagePath: AppAssets.progresDiskalkulia,
+    ),
+    evaluasiImagePath: AppAssets.evaluasiDiskalkulia,
+    skriningTombolLabel: 'Selesaikan 7 Sesi',
+    skriningSubtitle: 'Selesaikan Semua Sesi Untuk\nMembuka Skrining Evaluasi',
+  ),
+  _Gejala(
+    label: 'Disleksia',
+    sublabel: '',
+    imagePath: AppAssets.therapyDyslexia,
+    bgColor: Color(0xFF678E8B),
+    strokeColor: Colors.transparent,
+    textColor: Colors.white,
+    sesiList: _sesiDisleksia,
+    progres: _ProgresData(
+      selesai: 1,
+      total: 7,
+      imagePath: AppAssets.treatmentGirlReading,
+    ),
+    evaluasiImagePath: AppAssets.treatmentBoyMagnifier2,
+    skriningTombolLabel: 'Selesaikan 7 Sesi',
+    skriningSubtitle: 'Selesaikan Semua Sesi Untuk\nMembuka Skrining Evaluasi',
+  ),
+  _Gejala(
+    label: 'Disgrafia',
+    sublabel: '',
+    imagePath: AppAssets.therapyDysgraphia,
+    bgColor: Color(0xFFFFECC1),
+    strokeColor: Colors.transparent,
+    textColor: Color(0xFF2B2F3C),
+    sesiList: _sesiDisgrafia,
+    progres: _ProgresData(
+      selesai: 2,
+      total: 7,
+      imagePath: AppAssets.treatmentGirlReading,
+    ),
+    evaluasiImagePath: AppAssets.treatmentBoyMagnifier2,
+    skriningTombolLabel: 'Selesaikan 7 Sesi',
+    skriningSubtitle: 'Selesaikan Semua Sesi Untuk\nMembuka Skrining Evaluasi',
+  ),
+];
+
+// ─── Screen utama ─────────────────────────────────────────────────────────────
 class DiskalkuliaTreatmentScreen extends StatefulWidget {
   const DiskalkuliaTreatmentScreen({super.key});
 
@@ -44,84 +283,14 @@ class DiskalkuliaTreatmentScreen extends StatefulWidget {
       _DiskalkuliaTreatmentScreenState();
 }
 
-class _DiskalkuliaTreatmentScreenState extends State<DiskalkuliaTreatmentScreen> {
-  int _selectedGejala = 0; // 0=Diskalkulia, 1=Disleksia, 2=Disgrafia
-
-  static const _gejalaList = [
-    _Gejala(
-      label: 'Diskalkulia',
-      sublabel: '',
-      imagePath: AppAssets.therapyDyscalculia,
-      bgColor: Color(0xFFF57568),
-      strokeColor: Color(0xFFD83B2B),
-      textColor: Colors.white,
-    ),
-    _Gejala(
-      label: 'Disleksia',
-      sublabel: '',
-      imagePath: AppAssets.therapyDyslexia,
-      bgColor: Color(0xFF678E8B),
-      strokeColor: Colors.transparent,
-      textColor: Colors.white,
-    ),
-    _Gejala(
-      label: 'Disgrafia',
-      sublabel: '',
-      imagePath: AppAssets.therapyDysgraphia,
-      bgColor: Color(0xFFFFECC1),
-      strokeColor: Colors.transparent,
-      textColor: Color(0xFF2B2F3C),
-    ),
-  ];
-
-  static const _sesiList = [
-    _SesiTerapi(
-      judul: 'Sesi 1: Mengenal Angka dan Bilangan',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi1DiskalkuliaAngka,
-    ),
-    _SesiTerapi(
-      judul: 'Sesi 2: Memahami Jumlah Benda',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi2DiskalkuliaJumlah,
-    ),
-    _SesiTerapi(
-      judul: 'Sesi 3: Mengenal Pola Bilangan',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi3DiskalkuliaPola,
-    ),
-    _SesiTerapi(
-      judul: 'Sesi 4: Belajar Penjumlahan Dasar',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi4DiskalkuliaJumlah,
-    ),
-    _SesiTerapi(
-      judul: 'Sesi 5: Mengenal Bentuk dan Ukuran',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi5DiskalkuliaBentuk,
-    ),
-    _SesiTerapi(
-      judul: 'Sesi 6: Mengurutkan dan Membandingkan',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi6DiskalkuliaUrut,
-    ),
-    _SesiTerapi(
-      judul: 'Sesi 7: Tantangan Berhitung',
-      jumlahSoal: 10,
-      bintang: 3,
-      imagePath: AppAssets.sesi7DiskalkuliaTantang,
-    ),
-  ];
+class _DiskalkuliaTreatmentScreenState
+    extends State<DiskalkuliaTreatmentScreen> {
+  int _selectedGejala = 0; // default: Diskalkulia
 
   @override
   Widget build(BuildContext context) {
     final r = Responsive.of(context);
+    final gejala = _gejalaList[_selectedGejala];
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F0E8),
@@ -172,11 +341,7 @@ class _DiskalkuliaTreatmentScreenState extends State<DiskalkuliaTreatmentScreen>
                             color: AppColors.textDark,
                           ),
                         ),
-                        _OrangeButton(
-                          label: 'Laporan',
-                          r: r,
-                          onTap: () {},
-                        ),
+                        _OrangeButton(label: 'Laporan', r: r, onTap: () {}),
                       ],
                     ),
 
@@ -201,9 +366,9 @@ class _DiskalkuliaTreatmentScreenState extends State<DiskalkuliaTreatmentScreen>
 
                     SizedBox(height: r.h(24)),
 
-                    // ── Progres Terapi ──────────────────────────────
+                    // ── Progres Terapi (berubah sesuai gejala) ──────
                     Text(
-                      'Progres Terapi ${_gejalaList[_selectedGejala].label}',
+                      'Progres Terapi ${gejala.label}',
                       style: GoogleFonts.inter(
                         fontSize: r.sp(15),
                         fontWeight: FontWeight.w700,
@@ -212,16 +377,28 @@ class _DiskalkuliaTreatmentScreenState extends State<DiskalkuliaTreatmentScreen>
                     ),
                     SizedBox(height: r.h(12)),
 
-                    // Card progres pink
-                    _ProgresCard(r: r),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: _ProgresCard(
+                        key: ValueKey(_selectedGejala),
+                        progres: gejala.progres,
+                        r: r,
+                      ),
+                    ),
                     SizedBox(height: r.h(12)),
 
-                    // Card skrining evaluasi
-                    _SkriningCard(r: r),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: _SkriningCard(
+                        key: ValueKey('skrining_$_selectedGejala'),
+                        gejala: gejala,
+                        r: r,
+                      ),
+                    ),
 
                     SizedBox(height: r.h(24)),
 
-                    // ── Sesi Terapi ─────────────────────────────────
+                    // ── Sesi Terapi (berubah sesuai gejala) ─────────
                     Text(
                       'Sesi Terapi',
                       style: GoogleFonts.inter(
@@ -232,10 +409,43 @@ class _DiskalkuliaTreatmentScreenState extends State<DiskalkuliaTreatmentScreen>
                     ),
                     SizedBox(height: r.h(12)),
 
-                    ..._sesiList.map(
-                      (sesi) => Padding(
-                        padding: EdgeInsets.only(bottom: r.h(10)),
-                        child: _SesiCard(sesi: sesi, r: r),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: Container(
+                        key: ValueKey('sesi_$_selectedGejala'),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(r.r(16)),
+                          border: Border.all(
+                            color: const Color(0xFFFFB800),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Column(
+                          children: List.generate(gejala.sesiList.length,
+                              (index) {
+                            final sesi = gejala.sesiList[index];
+                            final isLast =
+                                index == gejala.sesiList.length - 1;
+                            return Column(
+                              children: [
+                                _SesiCard(
+                                  sesi: sesi,
+                                  r: r,
+                                  showSoal: _selectedGejala != 2,
+                                ),
+                                if (!isLast)
+                                  Divider(
+                                    height: 1,
+                                    thickness: 1,
+                                    color: const Color(0xFFF0F0F0),
+                                    indent: r.w(16),
+                                    endIndent: r.w(16),
+                                  ),
+                              ],
+                            );
+                          }),
+                        ),
                       ),
                     ),
 
@@ -274,23 +484,17 @@ class _DiskalkuliaTreatmentScreenState extends State<DiskalkuliaTreatmentScreen>
         ),
       ),
 
-      // ── Bottom nav bar ────────────────────────────────────────────
       bottomNavigationBar: _BottomNavBar(currentIndex: 1),
-
-      // ── FAB chatbot ───────────────────────────────────────────────
       floatingActionButton: _ChatbotFAB(r: r),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
 
-// Tombol oranye kecil (Laporan)
+// ─── Tombol oranye kecil ──────────────────────────────────────────────────────
 class _OrangeButton extends StatelessWidget {
-  const _OrangeButton({
-    required this.label,
-    required this.r,
-    required this.onTap,
-  });
+  const _OrangeButton(
+      {required this.label, required this.r, required this.onTap});
   final String label;
   final Responsive r;
   final VoidCallback onTap;
@@ -319,7 +523,7 @@ class _OrangeButton extends StatelessWidget {
   }
 }
 
-// Selector gejala (3 card horizontal) — selected: lebih besar + shadow
+// ─── Selector gejala ──────────────────────────────────────────────────────────
 class _GejalaSelector extends StatelessWidget {
   const _GejalaSelector({
     required this.gejalaList,
@@ -339,10 +543,8 @@ class _GejalaSelector extends StatelessWidget {
       children: List.generate(gejalaList.length, (i) {
         final g = gejalaList[i];
         final isSelected = i == selected;
-
-        // Yang dipilih lebih tinggi, yang tidak dipilih lebih kecil
         final double cardHeight = isSelected ? r.h(115) : r.h(90);
-        final double imgSize   = isSelected ? r.h(56)  : r.h(46);
+        final double imgSize = isSelected ? r.h(56) : r.h(46);
 
         return Expanded(
           child: GestureDetector(
@@ -371,49 +573,50 @@ class _GejalaSelector extends StatelessWidget {
                       ]
                     : [],
               ),
-              // ClipRRect agar gambar tidak overflow keluar card
               child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: imgSize,
-                      width: imgSize,
-                      child: Image.asset(
-                        g.imagePath,
-                        fit: BoxFit.contain,
-                        errorBuilder: (ctx, e, s) => Icon(
-                          Icons.image_outlined,
-                          size: imgSize * 0.7,
-                          color: isSelected ? Colors.white : AppColors.textMuted,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: r.h(6)),
-                    Text(
-                      g.label,
-                      style: GoogleFonts.inter(
-                        fontSize: r.sp(12),
-                        fontWeight: FontWeight.w700,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: imgSize,
+                    width: imgSize,
+                    child: Image.asset(
+                      g.imagePath,
+                      fit: BoxFit.contain,
+                      errorBuilder: (ctx, e, s) => Icon(
+                        Icons.image_outlined,
+                        size: imgSize * 0.7,
                         color: isSelected
-                            ? g.textColor
-                            : const Color(0xFF1A1A1A),
+                            ? Colors.white
+                            : AppColors.textMuted,
                       ),
                     ),
-                    if (g.sublabel.isNotEmpty) ...[
-                      SizedBox(height: r.h(2)),
-                      Text(
-                        g.sublabel,
-                        style: GoogleFonts.inter(
-                          fontSize: r.sp(9),
-                          fontWeight: FontWeight.w400,
-                          color: isSelected
-                              ? g.textColor.withValues(alpha: 0.85)
-                              : AppColors.textMuted,
-                        ),
+                  ),
+                  SizedBox(height: r.h(6)),
+                  Text(
+                    g.label,
+                    style: GoogleFonts.inter(
+                      fontSize: r.sp(12),
+                      fontWeight: FontWeight.w700,
+                      color: isSelected
+                          ? g.textColor
+                          : const Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  if (g.sublabel.isNotEmpty) ...[
+                    SizedBox(height: r.h(2)),
+                    Text(
+                      g.sublabel,
+                      style: GoogleFonts.inter(
+                        fontSize: r.sp(9),
+                        fontWeight: FontWeight.w400,
+                        color: isSelected
+                            ? g.textColor.withValues(alpha: 0.85)
+                            : AppColors.textMuted,
                       ),
-                    ],
+                    ),
                   ],
-                ),
+                ],
+              ),
             ),
           ),
         );
@@ -422,9 +625,10 @@ class _GejalaSelector extends StatelessWidget {
   }
 }
 
-// Card progres pink
+// ─── Card progres (dinamis) ───────────────────────────────────────────────────
 class _ProgresCard extends StatelessWidget {
-  const _ProgresCard({required this.r});
+  const _ProgresCard({super.key, required this.progres, required this.r});
+  final _ProgresData progres;
   final Responsive r;
 
   @override
@@ -439,9 +643,8 @@ class _ProgresCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Ilustrasi anak berhitung — placeholder, ganti gambar sesungguhnya
           Image.asset(
-            AppAssets.progresDiskalkulia,
+            progres.imagePath,
             height: r.h(80),
             width: r.w(80),
             fit: BoxFit.contain,
@@ -452,12 +655,11 @@ class _ProgresCard extends StatelessWidget {
                 color: const Color(0xFFF5C0C0),
                 borderRadius: BorderRadius.circular(r.r(12)),
               ),
-              child: Icon(Icons.calculate_rounded,
+              child: Icon(Icons.child_care,
                   size: r.sp(40), color: const Color(0xFFE87070)),
             ),
           ),
           SizedBox(width: r.w(16)),
-          // Teks progres
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -478,13 +680,30 @@ class _ProgresCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: r.h(4)),
-                  Text(
-                    'Aca Berhasil Menyelesaikan\n7 Dari 7 Sesi Minggu Ini',
-                    style: GoogleFonts.inter(
-                      fontSize: r.sp(12),
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
-                      height: 1.4,
+                  RichText(
+                    text: TextSpan(
+                      style: GoogleFonts.inter(
+                        fontSize: r.sp(12),
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        height: 1.4,
+                      ),
+                      children: [
+                        const TextSpan(
+                            text: 'Aca Berhasil Menyelesaikan\n'),
+                        TextSpan(
+                          text: '${progres.selesai} ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700),
+                        ),
+                        const TextSpan(text: 'Dari '),
+                        TextSpan(
+                          text: '${progres.total} ',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700),
+                        ),
+                        const TextSpan(text: 'Sesi Minggu Ini'),
+                      ],
                     ),
                   ),
                 ],
@@ -497,9 +716,11 @@ class _ProgresCard extends StatelessWidget {
   }
 }
 
-// Card skrining evaluasi akhir
+// ─── Card skrining (dinamis) ──────────────────────────────────────────────────
 class _SkriningCard extends StatelessWidget {
-  const _SkriningCard({required this.r});
+  const _SkriningCard(
+      {super.key, required this.gejala, required this.r});
+  final _Gejala gejala;
   final Responsive r;
 
   @override
@@ -515,7 +736,6 @@ class _SkriningCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Konten kiri
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -530,7 +750,7 @@ class _SkriningCard extends StatelessWidget {
                 ),
                 SizedBox(height: r.h(4)),
                 Text(
-                  'Hebat! Semua Sesi Telah Selesai\nYuk, Mulai Treatment Yang Lain',
+                  gejala.skriningSubtitle,
                   style: GoogleFonts.inter(
                     fontSize: r.sp(12),
                     fontWeight: FontWeight.w400,
@@ -539,18 +759,18 @@ class _SkriningCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: r.h(12)),
-                // Tombol mulai treatment — hijau dengan shadow
                 GestureDetector(
                   onTap: () {},
                   child: Container(
                     padding: EdgeInsets.symmetric(
                         horizontal: r.w(16), vertical: r.h(8)),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF5CB85C),
+                      color: const Color(0xFFF28B6E),
                       borderRadius: BorderRadius.circular(r.r(20)),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF5CB85C).withValues(alpha: 0.4),
+                          color: const Color(0xFFF28B6E)
+                              .withValues(alpha: 0.4),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -559,11 +779,11 @@ class _SkriningCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.check_circle,
-                            color: Colors.white, size: 16),
+                        const Icon(Icons.lock,
+                            color: Colors.white, size: 14),
                         SizedBox(width: r.w(6)),
                         Text(
-                          'Mulai Treatment',
+                          gejala.skriningTombolLabel,
                           style: GoogleFonts.inter(
                             fontSize: r.sp(12),
                             fontWeight: FontWeight.w600,
@@ -578,9 +798,8 @@ class _SkriningCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: r.w(12)),
-          // Ilustrasi evaluasi — placeholder, ganti gambar sesungguhnya
           Image.asset(
-            AppAssets.evaluasiDiskalkulia,
+            gejala.evaluasiImagePath,
             height: r.h(90),
             width: r.w(80),
             fit: BoxFit.contain,
@@ -601,62 +820,74 @@ class _SkriningCard extends StatelessWidget {
   }
 }
 
-// Card sesi terapi
+// ─── Card sesi ────────────────────────────────────────────────────────────────
 class _SesiCard extends StatelessWidget {
-  const _SesiCard({required this.sesi, required this.r});
+  const _SesiCard({required this.sesi, required this.r, this.showSoal = true});
   final _SesiTerapi sesi;
   final Responsive r;
+  final bool showSoal;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
+    final isLocked = sesi.status == _SesiStatus.terkunci;
+    final isLanjut = sesi.status == _SesiStatus.lanjut;
+    final isSelesai = sesi.status == _SesiStatus.selesai;
+
+    return InkWell(
+      onTap: isLocked ? null : () {},
       borderRadius: BorderRadius.circular(r.r(14)),
-      shadowColor: Colors.black.withValues(alpha: 0.08),
-      elevation: 3,
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(r.r(14)),
-        splashColor: const Color(0xFFFFF3DC),
-        highlightColor: Colors.transparent,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: r.w(12), vertical: r.h(12)),
-          child: Row(
-            children: [
-              Container(
-                width: r.r(52),
-                height: r.r(52),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFF3DC),
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(r.w(10)),
-                  child: Image.asset(
-                    sesi.imagePath,
-                    fit: BoxFit.contain,
-                    errorBuilder: (ctx, e, s) => Icon(
-                      Icons.calculate_rounded,
-                      size: r.sp(24),
-                      color: const Color(0xFFE8A838),
-                    ),
-                  ),
-                ),
+      splashColor: const Color(0xFFFFF3DC),
+      highlightColor: Colors.transparent,
+      child: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: r.w(14), vertical: r.h(14)),
+        child: Row(
+          children: [
+            // Ikon sesi
+            Container(
+              width: r.r(50),
+              height: r.r(50),
+              decoration: BoxDecoration(
+                color: isLocked
+                    ? const Color(0xFFE0E0E0)
+                    : const Color(0xFFFFF3DC),
+                shape: BoxShape.circle,
               ),
-              SizedBox(width: r.w(12)),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      sesi.judul,
-                      style: GoogleFonts.inter(
-                        fontSize: r.sp(13),
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textDark,
-                        height: 1.3,
+              child: isLocked
+                  ? Icon(Icons.lock,
+                      size: r.sp(22), color: const Color(0xFF9E9E9E))
+                  : Padding(
+                      padding: EdgeInsets.all(r.w(10)),
+                      child: Image.asset(
+                        sesi.imagePath,
+                        fit: BoxFit.contain,
+                        errorBuilder: (ctx, e, s) => Icon(
+                          Icons.auto_stories_rounded,
+                          size: r.sp(22),
+                          color: const Color(0xFFE8A838),
+                        ),
                       ),
                     ),
+            ),
+            SizedBox(width: r.w(14)),
+
+            // Judul + jumlah soal
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    sesi.judul,
+                    style: GoogleFonts.inter(
+                      fontSize: r.sp(13),
+                      fontWeight: FontWeight.w600,
+                      color: isLocked
+                          ? AppColors.textMuted
+                          : AppColors.textDark,
+                      height: 1.3,
+                    ),
+                  ),
+                  if (showSoal) ...[
                     SizedBox(height: r.h(3)),
                     Text(
                       '${sesi.jumlahSoal} Soal',
@@ -667,8 +898,14 @@ class _SesiCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
+                ],
               ),
+            ),
+
+            SizedBox(width: r.w(8)),
+
+            // Status kanan
+            if (isSelesai)
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: List.generate(3, (i) {
@@ -680,15 +917,57 @@ class _SesiCard extends StatelessWidget {
                     size: r.sp(18),
                   );
                 }),
+              )
+            else if (isLanjut)
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: r.w(12), vertical: r.h(6)),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF28B6E),
+                  borderRadius: BorderRadius.circular(r.r(20)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.play_arrow,
+                        color: Colors.white, size: r.sp(14)),
+                    SizedBox(width: r.w(4)),
+                    Text(
+                      'Lanjut',
+                      style: GoogleFonts.inter(
+                        fontSize: r.sp(12),
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            else
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.lock,
+                      size: r.sp(13), color: AppColors.textMuted),
+                  SizedBox(width: r.w(4)),
+                  Text(
+                    'Terkunci',
+                    style: GoogleFonts.inter(
+                      fontSize: r.sp(11),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
+// ─── Chatbot FAB ──────────────────────────────────────────────────────────────
 class _ChatbotFAB extends StatelessWidget {
   const _ChatbotFAB({required this.r});
   final Responsive r;
@@ -699,10 +978,8 @@ class _ChatbotFAB extends StatelessWidget {
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Chatbot segera hadir!',
-              style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-            ),
+            content: Text('Chatbot segera hadir!',
+                style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
             backgroundColor: const Color(0xFF5F8F8A),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -725,25 +1002,26 @@ class _ChatbotFAB extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(Icons.chat_rounded, color: Colors.white, size: r.sp(26)),
+        child:
+            Icon(Icons.chat_rounded, color: Colors.white, size: r.sp(26)),
       ),
     );
   }
 }
 
-// Bottom navigation bar
+// ─── Bottom navigation bar ────────────────────────────────────────────────────
 class _BottomNavBar extends StatelessWidget {
   const _BottomNavBar({required this.currentIndex});
   final int currentIndex;
 
-  static const _activeColor   = Color(0xFFF88D95);
+  static const _activeColor = Color(0xFFF88D95);
   static const _inactiveColor = Color(0xFFAAAAAA);
 
   static const _items = [
-    _NavItem(icon: 'assets/images/ic_home.png',      label: 'Home'),
+    _NavItem(icon: 'assets/images/ic_home.png', label: 'Home'),
     _NavItem(icon: 'assets/images/ic_treatment.png', label: 'Treatment'),
-    _NavItem(icon: 'assets/images/ic_artikel.png',   label: 'Artikel'),
-    _NavItem(icon: 'assets/images/ic_profile.png',   label: 'Profil'),
+    _NavItem(icon: 'assets/images/ic_artikel.png', label: 'Artikel'),
+    _NavItem(icon: 'assets/images/ic_profile.png', label: 'Profil'),
   ];
 
   @override
@@ -764,8 +1042,7 @@ class _BottomNavBar extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(_items.length, (index) {
@@ -793,8 +1070,7 @@ class _BottomNavBar extends StatelessWidget {
                         errorBuilder: (ctx, err, stack) => Icon(
                           _fallbackIcon(index),
                           size: 24,
-                          color:
-                              isActive ? _activeColor : _inactiveColor,
+                          color: isActive ? _activeColor : _inactiveColor,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -805,8 +1081,7 @@ class _BottomNavBar extends StatelessWidget {
                           fontWeight: isActive
                               ? FontWeight.w700
                               : FontWeight.w500,
-                          color:
-                              isActive ? _activeColor : _inactiveColor,
+                          color: isActive ? _activeColor : _inactiveColor,
                         ),
                       ),
                     ],
@@ -822,11 +1097,16 @@ class _BottomNavBar extends StatelessWidget {
 
   IconData _fallbackIcon(int index) {
     switch (index) {
-      case 0:  return Icons.home_rounded;
-      case 1:  return Icons.medical_services_rounded;
-      case 2:  return Icons.article_rounded;
-      case 3:  return Icons.person_rounded;
-      default: return Icons.circle;
+      case 0:
+        return Icons.home_rounded;
+      case 1:
+        return Icons.medical_services_rounded;
+      case 2:
+        return Icons.article_rounded;
+      case 3:
+        return Icons.person_rounded;
+      default:
+        return Icons.circle;
     }
   }
 }

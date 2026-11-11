@@ -105,6 +105,17 @@ flutter:
     - assets/images/ic_artikel.png
     - assets/images/ic_treatment.png
     - assets/images/ic_chatbot.png
+    - assets/images/progres_diskalkulia.png
+    - assets/images/evaluasi_diskalkulia.png
+    - assets/images/sesi_1_diskalkulia_angka.png
+    - assets/images/sesi_2_diskalkulia_jumlah.png
+    - assets/images/sesi_3_diskalkulia_pola.png
+    - assets/images/sesi_4_diskalkulia_penjumlahan.png
+    - assets/images/sesi_5_diskalkulia_bentuk.png
+    - assets/images/sesi_6_diskalkulia_urut.png
+    - assets/images/sesi_7_diskalkulia_tantangan.png
+    - assets/images/sesi_1_disgrafia.png
+    - assets/images/sesi_2_disgrafia.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

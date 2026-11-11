@@ -47,4 +47,8 @@ class AppAssets {
   static const String sesi5DiskalkuliaBentuk   = 'assets/images/sesi_5_diskalkulia_bentuk.png';
   static const String sesi6DiskalkuliaUrut     = 'assets/images/sesi_6_diskalkulia_urut.png';
   static const String sesi7DiskalkuliaTantang  = 'assets/images/sesi_7_diskalkulia_tantangan.png';
+
+  // — Treatment: Disgrafia —
+  static const String sesi1Disgrafia           = 'assets/images/sesi_1_disgrafia.png';
+  static const String sesi2Disgrafia           = 'assets/images/sesi_2_disgrafia.png';
 }
