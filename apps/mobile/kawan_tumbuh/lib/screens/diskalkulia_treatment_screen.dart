@@ -276,7 +276,11 @@ const _gejalaList = [
 
 // ─── Screen utama ─────────────────────────────────────────────────────────────
 class DiskalkuliaTreatmentScreen extends StatefulWidget {
-  const DiskalkuliaTreatmentScreen({super.key});
+  const DiskalkuliaTreatmentScreen({super.key, this.initialGejala = 0});
+
+  /// Gejala yang langsung terpilih saat screen dibuka.
+  /// 0 = Diskalkulia, 1 = Disleksia, 2 = Disgrafia.
+  final int initialGejala;
 
   @override
   State<DiskalkuliaTreatmentScreen> createState() =>
@@ -285,7 +289,13 @@ class DiskalkuliaTreatmentScreen extends StatefulWidget {
 
 class _DiskalkuliaTreatmentScreenState
     extends State<DiskalkuliaTreatmentScreen> {
-  int _selectedGejala = 0; // default: Diskalkulia
+  late int _selectedGejala;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGejala = widget.initialGejala;
+  }
 
   @override
   Widget build(BuildContext context) {

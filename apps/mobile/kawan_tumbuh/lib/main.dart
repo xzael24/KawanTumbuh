@@ -52,7 +52,7 @@ class KawanTumbuhApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // Splash screen sebagai halaman pertama
-      home: const SplashScreen(),
+      home: const HomeScreen(),
       // Daftarkan route untuk halaman berikutnya
       routes: {
         AppConstants.routeOnboarding : (context) => const OnboardingScreen(),
@@ -75,6 +75,9 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeArtikel:                       (context) => const ArtikelScreen(),
         AppConstants.routeTreatment:                     (context) => const DisleksiaTreatmentScreen(),
         AppConstants.routeTreatmentDiskalkulia:           (context) => const DiskalkuliaTreatmentScreen(),
+        // Disgrafia memakai screen yang sama, dibuka dengan gejala Disgrafia
+        // (index 2) langsung terpilih.
+        AppConstants.routeTreatmentDisgrafia:            (context) => const DiskalkuliaTreatmentScreen(initialGejala: 2),
         AppConstants.routeKuesionerIkhtisar:              (context) => const KuesionerIkhtisarScreen(),
         AppConstants.routeKuesioner:                      (context) => const KuesionerScreen(),
         AppConstants.routeHasilKuesioner:                 (context) => const HasilKuesionerScreen(),

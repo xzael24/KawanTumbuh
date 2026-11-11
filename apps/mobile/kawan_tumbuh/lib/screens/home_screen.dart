@@ -55,14 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
       'bgColor': const Color(0xFF5F8F8A),
       'route': '/treatment',
     },
-    // Disgrafia: belum ada screen treatment — sengaja tanpa 'route'
-    // sehingga kartunya belum bisa diklik.
     {
       'title': 'Disgrafia',
       'subtitle': 'Treatment',
       'sessions': '7 Sesi',
       'image': 'assets/images/therapy_dysgraphia.png',
       'bgColor': const Color(0xFFF5E6C8),
+      'route': '/treatment-disgrafia',
     },
   ];
 
@@ -306,8 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildTherapyCard(Map<String, dynamic> card, bool isDark) {
     final String? route = card['route'] as String?;
     return GestureDetector(
-      // Kartu tanpa route (Disgrafia) sengaja tidak bisa diklik
-      // sampai screen treatment disgrafia tersedia.
+      // Kartu tanpa 'route' (jika ada nanti) otomatis tidak bisa diklik.
       onTap: route == null ? null : () => Navigator.pushNamed(context, route),
       child: Container(
         width: 120,
