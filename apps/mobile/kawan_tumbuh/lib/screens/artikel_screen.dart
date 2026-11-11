@@ -456,7 +456,13 @@ class _BottomNavBar extends StatelessWidget {
               return GestureDetector(
                 onTap: () {
                   if (index == 0) {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    // Bersihkan stack agar tidak menumpuk Home ganda
+                    // saat menekan tombol back.
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/home',
+                      (route) => false,
+                    );
                   } else if (index == 1) {
                     Navigator.pushReplacementNamed(context, '/treatment');
                   }
