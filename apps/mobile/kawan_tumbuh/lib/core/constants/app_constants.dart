@@ -30,4 +30,6 @@ class AppConstants {
   static const String routeKuesionerIkhtisar           = '/kuesioner-ikhtisar';
   static const String routeKuesioner                   = '/kuesioner';
   static const String routeHasilKuesioner              = '/hasil-kuesioner';
+  static const String routeProfil                      = '/profil';
+  static const String routeNotifikasi                  = '/notifikasi';
 }

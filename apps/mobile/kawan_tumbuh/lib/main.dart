@@ -24,6 +24,8 @@ import 'screens/diskalkulia_treatment_screen.dart';
 import 'screens/kuesioner_ikhtisar_screen.dart';
 import 'screens/kuesioner_screen.dart';
 import 'screens/hasil_kuesioner_screen.dart';
+import 'screens/profil_screen.dart';
+import 'screens/notification_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -76,6 +78,8 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeKuesionerIkhtisar:              (context) => const KuesionerIkhtisarScreen(),
         AppConstants.routeKuesioner:                      (context) => const KuesionerScreen(),
         AppConstants.routeHasilKuesioner:                 (context) => const HasilKuesionerScreen(),
+        AppConstants.routeProfil:                         (context) => const ProfilScreen(),
+        AppConstants.routeNotifikasi:                     (context) => const NotificationScreen(),
       },
     );
   }

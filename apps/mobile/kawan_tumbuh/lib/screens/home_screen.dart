@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/notification_model.dart';
+import '../helpers/notification_data.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +14,29 @@ class _HomeScreenState extends State<HomeScreen> {
   // Indeks tab aktif untuk layar ini. Tab lain dibuka dengan push di atas
   // Home, jadi nilainya tetap 0 — tab Home selalu menyala di layar ini.
   final int _selectedIndex = 0;
+
+  // Data notifikasi — di-load ulang setiap kali kembali dari halaman notifikasi.
+  late List<NotificationModel> _notifications;
+
+  @override
+  void initState() {
+    super.initState();
+    _notifications = NotificationData.getSampleNotifications();
+  }
+
+  /// Hitung jumlah notifikasi yang belum dibaca untuk badge.
+  int get _unreadCount => NotificationData.getUnreadCount(_notifications);
+
+  /// Navigasi ke halaman notifikasi lalu refresh unread count saat kembali.
+  void _openNotifications() async {
+    await Navigator.pushNamed(context, '/notifikasi');
+    // Setelah kembali, reload notifikasi agar badge diperbarui.
+    if (mounted) {
+      setState(() {
+        _notifications = NotificationData.getSampleNotifications();
+      });
+    }
+  }
 
   final List<Map<String, dynamic>> _therapyCards = [
     {
@@ -108,31 +133,64 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+        // ── Icon Notifikasi dengan Badge ──────────────────────────
+        GestureDetector(
+          onTap: _openNotifications,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/ic_notification.png',
+                    width: 22,
+                    height: 22,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.notifications_outlined,
+                      size: 22,
+                      color: Color(0xFF5F8F8A),
+                    ),
+                  ),
+                ),
               ),
+              // Badge merah jumlah notifikasi belum dibaca
+              if (_unreadCount > 0)
+                Positioned(
+                  top: -2,
+                  right: -2,
+                  child: Container(
+                    width: 18,
+                    height: 18,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE53935),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        _unreadCount > 9 ? '9+' : '$_unreadCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
-          ),
-          child: Center(
-            child: Image.asset(
-              'assets/images/ic_notification.png',
-              width: 22,
-              height: 22,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.notifications_outlined,
-                size: 22,
-                color: Color(0xFF5F8F8A),
-              ),
-            ),
           ),
         ),
       ],
@@ -515,8 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   } else if (index == 2) {
                     Navigator.pushNamed(context, '/artikel');
                   } else if (index == 3) {
-                    // TODO: navigasi ke halaman profil
-                    _showComingSoonSnackBar('Halaman profil segera hadir!');
+                    Navigator.pushNamed(context, '/profil');
                   }
                 },
                 child: AnimatedContainer(
