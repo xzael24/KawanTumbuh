@@ -92,7 +92,12 @@ class _HasilAssessmentScreenState extends State<HasilAssessmentScreen> {
   ];
 
   void _onLanjut() {
-    Navigator.of(context).pushReplacementNamed('/home');
+    // Bersihkan sisa stack alur assessment agar tombol back dari Home
+    // langsung keluar aplikasi, bukan kembali ke layar assessment.
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/home',
+      (route) => false,
+    );
   }
 
   @override

@@ -9,7 +9,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  // Indeks tab aktif untuk layar ini. Tab lain dibuka dengan push di atas
+  // Home, jadi nilainya tetap 0 — tab Home selalu menyala di layar ini.
+  final int _selectedIndex = 0;
 
   final List<Map<String, dynamic>> _therapyCards = [
     {
@@ -410,20 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         // TODO: navigasi ke halaman chatbot
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Chatbot segera hadir!',
-              style: GoogleFonts.quicksand(fontWeight: FontWeight.w600),
-            ),
-            backgroundColor: const Color(0xFF5F8F8A),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        _showComingSoonSnackBar('Chatbot segera hadir!');
       },
       child: Container(
         width: 54,
@@ -452,6 +441,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // ── COMING SOON SNACKBAR ───────────────────────────────────────────────
+  void _showComingSoonSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: GoogleFonts.quicksand(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: const Color(0xFF5F8F8A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -487,11 +494,16 @@ class _HomeScreenState extends State<HomeScreen> {
               final isSelected = _selectedIndex == index;
               return GestureDetector(
                 onTap: () {
-                  setState(() => _selectedIndex = index);
+                  // _selectedIndex sengaja tidak diubah — layar lain
+                  // dibuka di atas Home, dan tab Home tetap menyala
+                  // saat kembali (lihat komentar pada deklarasi field).
                   if (index == 1) {
                     Navigator.pushNamed(context, '/treatment');
                   } else if (index == 2) {
                     Navigator.pushNamed(context, '/artikel');
+                  } else if (index == 3) {
+                    // TODO: navigasi ke halaman profil
+                    _showComingSoonSnackBar('Halaman profil segera hadir!');
                   }
                 },
                 child: AnimatedContainer(
