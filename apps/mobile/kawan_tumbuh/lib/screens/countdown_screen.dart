@@ -79,7 +79,7 @@ class _CountdownScreenState extends State<CountdownScreen>
 
     // Number
     _numberCtrl = AnimationController(
-      vsync: this,
+      vsync: this,  
       duration: const Duration(milliseconds: 350),
     );
     _numberScale = Tween<double>(begin: 1.6, end: 1.0).animate(

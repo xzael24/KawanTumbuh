@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/constants/app_assets.dart';
 import '../core/constants/app_colors.dart';
+import '../core/constants/app_constants.dart';
 import '../core/utils/responsive.dart';
 
 // ─── Reuse semua kode dari diskalkulia — cukup buat alias screen ──────────────
@@ -342,7 +343,13 @@ class _DisleksiaTreatmentScreenState extends State<DisleksiaTreatmentScreen> {
                           ),
                         ),
                         _OrangeButton(
-                            label: 'Laporan', r: r, onTap: () {}),
+                          label: 'Laporan',
+                          r: r,
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppConstants.routeLaporan,
+                          ),
+                        ),
                       ],
                     ),
 
