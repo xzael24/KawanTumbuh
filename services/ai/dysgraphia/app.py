@@ -35,9 +35,98 @@ from skimage.feature import graycomatrix, graycoprops
 # 1. Smart Pipeline Preprocessing & Feature Extraction
 # =============================================================================
 
+# Parameter deskew: rentang pencarian kemiringan tulisan.
+SKEW_SEARCH_DEG = 5.0
+SKEW_STEP_DEG = 0.5
+SKEW_MIN_APPLY_DEG = 1.0  # di bawah ini tidak perlu diputar, hemat komputasi
+# Pemisahan baris teks lewat horizontal projection profile.
+LINE_GAP_MIN_PX = 6
+LINE_MIN_HEIGHT_PX = 10
+
+
+def estimate_skew(binary):
+    """Perkirakan kemiringan tulisan (derajat) dengan memaksimalkan variansi profil baris.
+
+    Tulisan tegak menghasilkan profil baris yang tajam (variansi tinggi); tulisan miring
+    menyebar ke banyak baris sehingga variansi rendah. Sudut dengan variansi tertinggi
+    dipakai sebagai estimasi kemiringan.
+    """
+    h, w = binary.shape
+    scale = min(1.0, 600.0 / max(w, 1))
+    small = cv2.resize(binary, (max(1, int(w * scale)), max(1, int(h * scale))),
+                       interpolation=cv2.INTER_NEAREST)
+    sh, sw = small.shape
+    best_angle, best_score = 0.0, -1.0
+    angle = -SKEW_SEARCH_DEG
+    while angle <= SKEW_SEARCH_DEG + 1e-9:
+        m = cv2.getRotationMatrix2D((sw / 2.0, sh / 2.0), angle, 1.0)
+        rotated = cv2.warpAffine(small, m, (sw, sh), flags=cv2.INTER_NEAREST, borderValue=0)
+        score = float(np.var(rotated.sum(axis=1)))
+        if score > best_score:
+            best_angle, best_score = angle, score
+        angle += SKEW_STEP_DEG
+    return best_angle
+
+
+def deskew(gray_norm, binary):
+    """Putar citra agar garis dasar tulisan horizontal. Kembalikan (gray, binary, sudut)."""
+    angle = estimate_skew(binary)
+    if abs(angle) < SKEW_MIN_APPLY_DEG:
+        return gray_norm, binary, angle
+
+    h, w = binary.shape
+    m = cv2.getRotationMatrix2D((w / 2.0, h / 2.0), angle, 1.0)
+    gray_rot = cv2.warpAffine(gray_norm, m, (w, h), flags=cv2.INTER_LINEAR, borderValue=0)
+    bin_rot = cv2.warpAffine(binary, m, (w, h), flags=cv2.INTER_NEAREST, borderValue=0)
+    return gray_rot, bin_rot, angle
+
+
+def split_text_lines(binary):
+    rows = (binary > 0).sum(axis=1)
+    active = rows > max(1, int(0.01 * binary.shape[1]))
+    bands = []
+    start = None
+    for y, on in enumerate(active):
+        if on and start is None:
+            start = y
+        elif not on and start is not None:
+            bands.append((start, y))
+            start = None
+    if start is not None:
+        bands.append((start, len(active)))
+
+    bands = [b for b in bands if b[1] - b[0] >= LINE_MIN_HEIGHT_PX]
+    merged = []
+    for band in bands:
+        if merged and band[0] - merged[-1][1] < LINE_GAP_MIN_PX:
+            merged[-1] = (merged[-1][0], band[1])
+        else:
+            merged.append(band)
+    return merged
+
+
+def looks_like_page(bands):
+    """True kalau citra berisi banyak baris teks seragam (halaman penuh), bukan satu strip.
+
+    Ambang dikalibrasi pada 249 citra dataset: 0 false positive. Satu strip tulisan
+    bisa terpecah 2-4 pita karena jarak ascender/descender, tapi tingginya tidak
+    seragam dan celahnya kecil.
+    """
+    if len(bands) < 4:
+        return False
+    heights = [b[1] - b[0] for b in bands]
+    mean_h = float(np.mean(heights))
+    if mean_h <= 0:
+        return False
+    cv = float(np.std(heights) / mean_h)
+    max_gap = max(bands[i + 1][0] - bands[i][1] for i in range(len(bands) - 1))
+    return cv < 0.35 and max_gap >= 0.8 * mean_h
+
+
 def preprocess_image(img_path):
     """
     Melakukan Smart Preprocessing pada resolusi asli citra.
+    Mengembalikan (gray_raw, cropped_gray, cropped_binary, mode_desc, skew_deg).
     """
     img = Image.open(img_path).convert('L')
     gray_raw = np.array(img)
@@ -64,7 +153,12 @@ def preprocess_image(img_path):
         kernel_clean = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
         binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel_clean)
         mode_desc = "Format Latar Hitam (Dataset Native)"
-        
+
+    # Tegakkan tulisan sebelum crop: crop pada citra miring menyisakan banyak latar kosong.
+    gray_normalized, binary, skew_deg = deskew(gray_normalized, binary)
+    if abs(skew_deg) >= SKEW_MIN_APPLY_DEG:
+        mode_desc += f" | Deskew {skew_deg:.1f}"
+
     # Crop dengan margin proporsional 25px
     coords = cv2.findNonZero(binary)
     if coords is not None:
@@ -81,7 +175,7 @@ def preprocess_image(img_path):
         cropped_gray = gray_normalized
         cropped_binary = binary
         
-    return gray_raw, cropped_gray, cropped_binary, mode_desc
+    return gray_raw, cropped_gray, cropped_binary, mode_desc, skew_deg
 
 
 def extract_features(cropped_gray, cropped_binary):
@@ -259,23 +353,62 @@ class DysgraphiaClassifier:
                 'glcm_contrast', 'glcm_dissimilarity', 'glcm_homogeneity', 'glcm_energy', 'glcm_correlation'
             ]
 
-    def predict(self, image_path):
+        # Ambang keputusan: ambil dari metadata hasil tuning, bisa ditimpa lewat env.
+        self.threshold = 0.5
+        self.metadata_path = base_dir / "rf_optimization_metadata.json"
+        if self.metadata_path.exists():
+            with open(self.metadata_path, 'r', encoding='utf-8') as f:
+                metadata = json.load(f)
+            self.threshold = float(metadata.get('optimal_decision_threshold', 0.5))
+
+        env_threshold = os.environ.get('DYSGRAPHIA_DECISION_THRESHOLD')
+        if env_threshold:
+            self.threshold = float(env_threshold)
+
+    def _predict_proba(self, features_dict):
+        vector = np.array([features_dict[name] for name in self.feature_names]).reshape(1, -1)
+        vector_scaled = self.scaler.transform(vector)
+        return self.model.predict_proba(vector_scaled)[0]
+
+    def predict(self, image_path, mode="auto"):
         image_path = Path(image_path).resolve()
         if not image_path.exists():
             raise FileNotFoundError(f"File gambar tidak ditemukan: {image_path}")
-            
-        gray_raw, cropped_gray, cropped_binary, mode_desc = preprocess_image(image_path)
-        features_dict = extract_features(cropped_gray, cropped_binary)
-        
-        vector = np.array([features_dict[name] for name in self.feature_names]).reshape(1, -1)
-        vector_scaled = self.scaler.transform(vector)
-        
-        pred_class = int(self.model.predict(vector_scaled)[0])
-        prob_scores = self.model.predict_proba(vector_scaled)[0]
-        
-        prob_low = round(prob_scores[0] * 100, 2)
-        prob_pot = round(prob_scores[1] * 100, 2)
-        conf_score = round(prob_scores[pred_class] * 100, 2)
+
+        gray_raw, cropped_gray, cropped_binary, mode_desc, skew_deg = preprocess_image(image_path)
+
+        # Model dilatih pada potongan satu baris. Foto satu halaman harus dipecah per baris.
+        bands = split_text_lines(cropped_binary)
+        if mode == "page":
+            use_multi_line = len(bands) >= 2
+        elif mode == "strip":
+            use_multi_line = False
+        else:
+            use_multi_line = looks_like_page(bands)
+
+        if use_multi_line:
+            per_line_features = []
+            per_line_proba = []
+            for y1, y2 in bands:
+                feats = extract_features(cropped_gray[y1:y2], cropped_binary[y1:y2])
+                per_line_features.append(feats)
+                per_line_proba.append(self._predict_proba(feats))
+            features_dict = {
+                name: float(np.mean([f[name] for f in per_line_features]))
+                for name in self.feature_names
+            }
+            prob_scores = np.mean(per_line_proba, axis=0)
+            mode_desc += f" | Split {len(bands)} baris"
+            line_count = len(bands)
+        else:
+            features_dict = extract_features(cropped_gray, cropped_binary)
+            prob_scores = self._predict_proba(features_dict)
+            line_count = 1
+
+        pred_class = int(prob_scores[1] >= self.threshold)
+        prob_low = round(float(prob_scores[0]) * 100, 2)
+        prob_pot = round(float(prob_scores[1]) * 100, 2)
+        conf_score = round(float(prob_scores[pred_class]) * 100, 2)
         pred_label = "Potential Dysgraphia" if pred_class == 1 else "Low Potential Dysgraphia"
         
         return {
@@ -288,6 +421,9 @@ class DysgraphiaClassifier:
             'confidence_score': conf_score,
             'prob_low_potential': prob_low,
             'prob_potential': prob_pot,
+            'decision_threshold': round(self.threshold, 3),
+            'line_count': line_count,
+            'skew_degrees': round(float(skew_deg), 2),
             'features': features_dict,
             'orig_gray': gray_raw,
             'cropped_binary': cropped_binary
@@ -310,6 +446,7 @@ def run_cli(image_path):
         print(f"File Citra         : {res['filename']}")
         print(f"Model Digunakan    : {res['model_name']}")
         print(f"Mode Preprocessing : {res['mode_desc']}")
+        print(f"Ambang Keputusan   : {res['decision_threshold']} | Baris: {res['line_count']} | Skew: {res['skew_degrees']}°")
         print(f"Status Diagnosis   : {badge}")
         print(f"Prediksi Label     : {res['predicted_label']}")
         print(f"Tingkat Keyakinan  : {res['confidence_score']}%")
