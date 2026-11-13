@@ -17,7 +17,7 @@ import time
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 from app import DysgraphiaClassifier
@@ -66,13 +66,23 @@ def version() -> dict:
         "service": "dysgraphia",
         "modelVersion": classifier.model_name,
         "featureCount": len(classifier.feature_names),
+        "decisionThreshold": classifier.threshold,
     }
 
 
 @app.post("/analyze/dysgraphia")
-async def analyze_dysgraphia(image: UploadFile = File(...)) -> JSONResponse:
+async def analyze_dysgraphia(
+    image: UploadFile = File(...),
+    mode: str = Form("auto"),
+) -> JSONResponse:
     if classifier is None:
         raise HTTPException(status_code=503, detail="Model belum siap")
+
+    if mode not in {"auto", "strip", "page"}:
+        raise HTTPException(
+            status_code=400,
+            detail="Mode harus 'auto', 'strip', atau 'page'.",
+        )
 
     suffix = ALLOWED_CONTENT_TYPES.get(image.content_type or "")
     if suffix is None:
@@ -94,16 +104,20 @@ async def analyze_dysgraphia(image: UploadFile = File(...)) -> JSONResponse:
             tmp_path = tmp.name
 
         started = time.perf_counter()
-        result = classifier.predict(tmp_path)
+        result = classifier.predict(tmp_path, mode)
         latency_ms = round((time.perf_counter() - started) * 1000, 1)
 
         return JSONResponse(
             content={
                 "service": "dysgraphia",
                 "modelVersion": result["model_name"],
+                "mode": mode,
                 "label": result["predicted_label"],
                 "predictedClass": result["predicted_class"],
                 "confidence": result["confidence_score"],
+                "decisionThreshold": result["decision_threshold"],
+                "lineCount": result["line_count"],
+                "skewDegrees": result["skew_degrees"],
                 "probabilities": {
                     "low": result["prob_low_potential"],
                     "potential": result["prob_potential"],

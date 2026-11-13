@@ -60,14 +60,62 @@ Seluruh model dievaluasi secara ketat menggunakan *Stratified 5-Fold Cross Valid
 
 | Peringkat | Algoritma Klasifikasi | Akurasi (Mean ± Std) | F1-Score | ROC-AUC |
 |:---:|---|:---:|:---:|:---:|
-| 🥇 **1** | **Random Forest Classifier** | **82.31% ± 3.56%** | **85.0%** | **88.40%** |
-| 🥈 **2** | **Support Vector Machine (SVM RBF)** | **81.91% ± 2.96%** | **84.3%** | **87.56%** |
-| 🥉 **3** | **Extra Trees Classifier** | **82.29% ± 5.59%** | **84.8%** | **87.90%** |
-| 4 | **K-Nearest Neighbors (KNN)** | 80.73% ± 1.55% | 83.1% | 86.22% |
-| 5 | **Gradient Boosting** | 79.89% ± 5.19% | 82.2% | 88.43% |
-| 6 | **Logistic Regression** | 79.88% ± 6.27% | 82.0% | 87.55% |
+| 🥇 **1** | **Random Forest Classifier** | **82.31% ± 3.56%** | **79.02%** | **88.40%** |
+| 🥈 **2** | **Extra Trees Classifier** | **82.29% ± 5.59%** | **78.01%** | **87.90%** |
+| 🥉 **3** | **Support Vector Machine (SVM RBF)** | **81.91% ± 2.96%** | **78.36%** | **87.56%** |
+| 4 | **K-Nearest Neighbors (KNN)** | 80.73% ± 1.55% | 77.85% | 86.22% |
+| 5 | **Gradient Boosting** | 79.89% ± 5.19% | 76.98% | 88.43% |
+| 6 | **Logistic Regression** | 79.88% ± 6.27% | 76.64% | 87.55% |
 
-> Model terbaik terpilih (**Random Forest**) disimpan ke dalam berkas `best_dysgraphia_model.pkl`.
+> Peringkat mengikuti akurasi rata-rata. Selisih 3 besar berada di dalam rentang simpangan baku, jadi tidak signifikan secara statistik. Angka di atas berasal dari `Model_Training_and_Inference.ipynb` (RF `n_estimators=100, max_depth=6`); model yang dipakai aplikasi adalah hasil tuning di `Hyperparameter_Tuning_Random_Forest.ipynb`.
+
+> Model terbaik terpilih (**Random Forest**) disimpan ke dalam berkas `best_dysgraphia_model.pkl`. Model teroptimasi dari notebook tuning (`n_estimators=150`, `max_depth=9`, `max_features=sqrt`, `min_samples_split=6`, `class_weight=balanced`) disimpan ke `best_optimized_random_forest.pkl` dan inilah yang dimuat `app.py` bila ada.
+
+---
+
+## 🎯 Ambang Keputusan & Evaluasi Jujur
+
+Model mengembalikan probabilitas, jadi kelas akhir ditentukan oleh ambang, bukan argmax:
+
+* Ambang dibaca dari `rf_optimization_metadata.json` (`optimal_decision_threshold`, saat ini 0.45).
+* Bisa ditimpa tanpa mengubah kode: `DYSGRAPHIA_DECISION_THRESHOLD=0.5`.
+* Respons API menyertakan `decisionThreshold` supaya keputusan bisa diaudit.
+
+Akurasi pada seluruh dataset bersifat **in-sample** (model disimpan setelah `fit` di semua data). Angka generalisasi yang sah berasal dari out-of-fold cross-validation:
+
+```bash
+python evaluate.py            # 5-fold stratified CV dari dysgraphia_features.csv
+python evaluate.py --images   # tambahan: inferensi ulang seluruh citra dataset
+```
+
+Hasil out-of-fold pada repo ini (scaler di-fit per fold, tanpa kebocoran): akurasi **81.93%**, F1 **79.45%**, recall **78.07%** pada ambang 0.50; pada ambang metadata 0.45 → akurasi **81.93%**, F1 **79.82%**, recall **78.07%**.
+
+> Notebook tuning mencatat F1 81.65% (0.50) dan 81.94% (0.45), sedikit lebih tinggi karena `StandardScaler` di notebook di-fit pada seluruh data sebelum CV (kebocoran halus). Angka `evaluate.py` yang dipakai sebagai acuan.
+
+Catatan preprocessing: CSV fitur dihasilkan `Feature_Extraction_Dysgraphia.ipynb` dengan pipeline Otsu `THRESH_BINARY_INV` + opening 2×2 + crop padding 4 (tanpa blur/dilasi). `app.py` menambah pemeriksaan polaritas, blur, dan dilasi untuk foto ponsel, jadi fitur inferensi tidak identik dengan fitur CSV. Evaluasi out-of-fold mengukur model pada fitur CSV notebook, bukan pada pipeline `app.py`.
+
+---
+
+## 📄 Foto Satu Halaman & Deskew
+
+Dataset berisi potongan satu baris, sedangkan foto dari ponsel berisi satu halaman penuh dan sering miring. Karena itu preprocessing menambahkan:
+
+1. **Deskew** — estimasi kemiringan dengan memaksimalkan variansi profil proyeksi baris, lalu rotasi bila |sudut| ≥ 1°. Citra yang sudah tegak tidak diubah, sehingga hasil pada dataset tetap sama.
+2. **Pemisahan baris** — horizontal projection profile memecah halaman menjadi pita baris; tiap baris diekstraksi fiturnya lalu probabilitasnya dirata-rata.
+
+Pemecahan baris hanya aktif kalau citra benar-benar berbentuk halaman (≥ 4 pita dengan tinggi seragam dan celah lebar), dikalibrasi agar 0 dari 249 citra dataset salah terpecah. Untuk memaksa perilaku, kirim field `mode` pada request:
+
+| `mode` | Perilaku |
+|---|---|
+| `auto` (default) | Pecah baris hanya jika terdeteksi halaman penuh |
+| `strip` | Jangan pernah pecah (satu baris sudah terpotong) |
+| `page` | Selalu pecah per baris (foto halaman dari ponsel) |
+
+Uji cepat pipeline:
+
+```bash
+python test_pipeline.py
+```
 
 ---
 
@@ -80,13 +128,19 @@ Seluruh model dievaluasi secara ketat menggunakan *Stratified 5-Fold Cross Valid
 ├── EDA_Dysgraphia_Dataset.ipynb          # Notebook Tahap 1: Eksplorasi Data Awal (EDA)
 ├── Feature_Extraction_Dysgraphia.ipynb   # Notebook Tahap 2: Ekstraksi 25 Fitur & Uji Statistik
 ├── Model_Training_and_Inference.ipynb    # Notebook Tahap 3: Pelatihan Model, CV, & Evaluasi
+├── Hyperparameter_Tuning_Random_Forest.ipynb # Notebook Tahap 4: Tuning RF & ambang 0.45
 │
-├── dysgraphia_features.csv               # Dataset tabular 25 fitur hasil ekstraksi
-├── best_dysgraphia_model.pkl             # Model Random Forest terlatih
+├── dysgraphia_features.csv               # Dataset tabular 25 fitur (28 kolom: 25 fitur + metadata)
+├── best_dysgraphia_model.pkl             # Model Random Forest terlatih (baseline CV)
+├── best_optimized_random_forest.pkl      # Model RF hasil tuning (dipakai app.py)
+├── rf_optimization_metadata.json         # best_params + optimal_decision_threshold 0.45
 ├── dysgraphia_scaler.pkl                 # Scaler standarisasi fitur (StandardScaler)
 ├── feature_names.json                    # Metadata urutan nama-nama fitur
 │
-├── app.py                                # Aplikasi Desktop GUI & CLI testing citra
+├── app.py                                # Preprocessing + ekstraksi fitur + GUI/CLI
+├── main.py                               # FastAPI wrapper (port 8002)
+├── evaluate.py                           # Evaluasi out-of-fold CV + sweep ambang
+├── test_pipeline.py                      # Uji cepat: split baris, deskew, ambang
 └── README.md                             # Dokumentasi proyek
 ```
 
