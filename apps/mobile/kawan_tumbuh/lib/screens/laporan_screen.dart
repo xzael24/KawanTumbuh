@@ -91,8 +91,38 @@ const _dataDisgrafia = [
 final _chartData = [_dataDiskalkulia, _dataDisleksia, _dataDisgrafia];
 
 // ─── Screen Laporan ───────────────────────────────────────────────────────────
-class LaporanScreen extends StatelessWidget {
+class LaporanScreen extends StatefulWidget {
   const LaporanScreen({super.key});
+
+  @override
+  State<LaporanScreen> createState() => _LaporanScreenState();
+}
+
+class _LaporanScreenState extends State<LaporanScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animController;
+  late final Animation<double> _chartProgress;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _chartProgress = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeInOut,
+    );
+    // Mulai animasi begitu halaman terbuka
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +199,7 @@ class LaporanScreen extends StatelessWidget {
                   child: _ChartCard(
                     kondisi: _kondisiList[i],
                     dataPoin: _chartData[i],
+                    progress: _chartProgress,
                     r: r,
                   ),
                 );
@@ -368,10 +399,12 @@ class _ChartCard extends StatelessWidget {
   const _ChartCard({
     required this.kondisi,
     required this.dataPoin,
+    required this.progress,
     required this.r,
   });
   final _KondisiData kondisi;
   final List<_DataPoin> dataPoin;
+  final Animation<double> progress;
   final Responsive r;
 
   @override
@@ -420,6 +453,7 @@ class _ChartCard extends StatelessWidget {
             child: _LineChart(
               dataPoin: dataPoin,
               lineColor: kondisi.chartColor,
+              progress: progress,
               r: r,
             ),
           ),
@@ -430,18 +464,21 @@ class _ChartCard extends StatelessWidget {
 }
 
 // ─── Custom painter grafik garis ──────────────────────────────────────────────
-class _LineChart extends StatelessWidget {
+class _LineChart extends AnimatedWidget {
   const _LineChart({
     required this.dataPoin,
     required this.lineColor,
+    required Animation<double> progress,
     required this.r,
-  });
+  }) : super(listenable: progress);
+
   final List<_DataPoin> dataPoin;
   final Color lineColor;
   final Responsive r;
 
   @override
   Widget build(BuildContext context) {
+    final progress = (listenable as Animation<double>).value;
     return LayoutBuilder(
       builder: (context, constraints) {
         return CustomPaint(
@@ -449,6 +486,7 @@ class _LineChart extends StatelessWidget {
           painter: _LineChartPainter(
             dataPoin: dataPoin,
             lineColor: lineColor,
+            progress: progress,
           ),
         );
       },
@@ -457,9 +495,14 @@ class _LineChart extends StatelessWidget {
 }
 
 class _LineChartPainter extends CustomPainter {
-  _LineChartPainter({required this.dataPoin, required this.lineColor});
+  _LineChartPainter({
+    required this.dataPoin,
+    required this.lineColor,
+    required this.progress,
+  });
   final List<_DataPoin> dataPoin;
   final Color lineColor;
+  final double progress; // 0.0 → 1.0
 
   // Label sumbu Y
   static const _yLabels = ['Normal', 'Berpotensi', 'Berpotensi\nRendah'];
@@ -520,7 +563,13 @@ class _LineChartPainter extends CustomPainter {
       points.add(Offset(x, y));
     }
 
-    // ── Gambar garis ──────────────────────────────────────────────────
+    // ── Gambar garis dengan progress ─────────────────────────────────
+    // Hitung total panjang path lalu clip pakai PathMetric
+    final fullPath = Path()..moveTo(points.first.dx, points.first.dy);
+    for (int i = 1; i < points.length; i++) {
+      fullPath.lineTo(points[i].dx, points[i].dy);
+    }
+
     final linePaint = Paint()
       ..color = lineColor
       ..strokeWidth = 1.8
@@ -528,21 +577,31 @@ class _LineChartPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    final path = Path()..moveTo(points.first.dx, points.first.dy);
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx, points[i].dy);
-    }
-    canvas.drawPath(path, linePaint);
+    final metric = fullPath.computeMetrics().first;
+    final animPath =
+        metric.extractPath(0, metric.length * progress.clamp(0.0, 1.0));
+    canvas.drawPath(animPath, linePaint);
 
-    // ── Gambar titik poin ─────────────────────────────────────────────
+    // ── Gambar titik poin (muncul proporsional dengan progress) ───────
     final dotPaint = Paint()..color = lineColor;
     final dotOutline = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
-    for (final p in points) {
-      canvas.drawCircle(p, 4.5, dotPaint);
-      canvas.drawCircle(p, 4.5, dotOutline);
+
+    // Berapa poin yang sudah "terlewati" oleh garis
+    final visibleCount = (progress * n).ceil().clamp(0, n);
+    for (int i = 0; i < visibleCount; i++) {
+      // Titik terakhir yang sedang "berjalan" muncul dengan skala
+      double dotRadius = 4.5;
+      if (i == visibleCount - 1 && progress < 1.0) {
+        // Efek pop kecil di titik terdepan
+        final localProgress = (progress * n) - i;
+        dotRadius = 4.5 * localProgress.clamp(0.0, 1.0);
+      }
+      if (dotRadius <= 0) continue;
+      canvas.drawCircle(points[i], dotRadius, dotPaint);
+      canvas.drawCircle(points[i], dotRadius, dotOutline);
     }
 
     // ── Label sumbu X ────────────────────────────────────────────────
@@ -567,6 +626,7 @@ class _LineChartPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_LineChartPainter oldDelegate) =>
+      oldDelegate.progress != progress ||
       oldDelegate.dataPoin != dataPoin ||
       oldDelegate.lineColor != lineColor;
 }
