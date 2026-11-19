@@ -6,6 +6,7 @@ import '../core/constants/app_assets.dart';
 import '../core/constants/app_colors.dart';
 import '../core/constants/app_constants.dart';
 import '../core/utils/responsive.dart';
+import '../widgets/chatbot_overlay.dart';
 
 // ─── Reuse semua kode dari diskalkulia — cukup buat alias screen ──────────────
 // (Data model dan list didefinisikan ulang di sini agar file mandiri)
@@ -493,7 +494,7 @@ class _DisleksiaTreatmentScreenState extends State<DisleksiaTreatmentScreen> {
       ),
 
       bottomNavigationBar: _BottomNavBar(currentIndex: 1),
-      floatingActionButton: _ChatbotFAB(r: r),
+      floatingActionButton: const ChatbotButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -914,44 +915,6 @@ class _SesiCard extends StatelessWidget {
   }
 }
 
-class _ChatbotFAB extends StatelessWidget {
-  const _ChatbotFAB({required this.r});
-  final Responsive r;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Chatbot segera hadir!',
-              style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
-          backgroundColor: const Color(0xFF5F8F8A),
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          duration: const Duration(seconds: 2),
-        ));
-      },
-      child: Container(
-        width: r.r(52),
-        height: r.r(52),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF28B6E),
-          borderRadius: BorderRadius.circular(r.r(14)),
-          boxShadow: [
-            BoxShadow(
-                color: const Color(0xFFF28B6E).withValues(alpha: 0.45),
-                blurRadius: 14,
-                offset: const Offset(0, 6))
-          ],
-        ),
-        child:
-            Icon(Icons.chat_rounded, color: Colors.white, size: r.sp(26)),
-      ),
-    );
-  }
-}
-
 class _BottomNavBar extends StatelessWidget {
   const _BottomNavBar({required this.currentIndex});
   final int currentIndex;
@@ -995,6 +958,8 @@ class _BottomNavBar extends StatelessWidget {
                     Navigator.pushReplacementNamed(context, '/home');
                   } else if (index == 2) {
                     Navigator.pushReplacementNamed(context, '/artikel');
+                  } else if (index == 3) {
+                    Navigator.pushReplacementNamed(context, '/profil');
                   }
                 },
                 child: Padding(

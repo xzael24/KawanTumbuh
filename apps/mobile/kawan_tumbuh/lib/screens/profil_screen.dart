@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/chatbot_overlay.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({super.key});
@@ -60,6 +61,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
         ),
       ),
       bottomNavigationBar: _buildBottomNavBar(),
+      floatingActionButton: const ChatbotButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

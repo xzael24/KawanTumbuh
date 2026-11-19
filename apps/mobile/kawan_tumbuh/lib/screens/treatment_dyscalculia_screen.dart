@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/chatbot_overlay.dart';
 
 class TreatmentDyscalculiaScreen extends StatelessWidget {
   const TreatmentDyscalculiaScreen({super.key});
@@ -131,7 +132,7 @@ class TreatmentDyscalculiaScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: _buildBottomNavBar(context),
-      floatingActionButton: _buildChatbotFAB(context),
+      floatingActionButton: const ChatbotButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -669,43 +670,6 @@ class TreatmentDyscalculiaScreen extends StatelessWidget {
           style: GoogleFonts.quicksand(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── CHATBOT FAB ───────────────────────────────────────────────────────
-  Widget _buildChatbotFAB(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // TODO: navigasi ke halaman chatbot
-      },
-      child: Container(
-        width: 54,
-        height: 54,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF28B6E),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFF28B6E).withValues(alpha: 0.45),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Image.asset(
-            'assets/images/ic_chatbot.png',
-            width: 28,
-            height: 28,
-            color: Colors.white,
-            errorBuilder: (ctx, _, __) => const Icon(
-              Icons.chat_rounded,
-              color: Colors.white,
-              size: 28,
-            ),
           ),
         ),
       ),
