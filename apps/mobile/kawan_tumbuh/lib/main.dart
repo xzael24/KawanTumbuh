@@ -52,7 +52,7 @@ class KawanTumbuhApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // Splash screen sebagai halaman pertama
-      home: const HomeScreen(),
+      home: const SplashScreen(),
       // Daftarkan route untuk halaman berikutnya
       routes: {
         AppConstants.routeOnboarding : (context) => const OnboardingScreen(),
