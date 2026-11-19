@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../core/constants/app_assets.dart';
 import '../core/constants/app_colors.dart';
 import '../core/theme/app_text_styles.dart';
+import '../widgets/chatbot_overlay.dart';
 import '../core/utils/responsive.dart';
 import '../models/artikel_model.dart';
 import '../helpers/artikel_data.dart';
@@ -139,6 +140,8 @@ class _ArtikelScreenState extends State<ArtikelScreen> {
       ),
       // — Bottom navigation bar —
       bottomNavigationBar: _BottomNavBar(currentIndex: 2),
+      floatingActionButton: const ChatbotButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -465,6 +468,8 @@ class _BottomNavBar extends StatelessWidget {
                     );
                   } else if (index == 1) {
                     Navigator.pushReplacementNamed(context, '/treatment');
+                  } else if (index == 3) {
+                    Navigator.pushReplacementNamed(context, '/profil');
                   }
                 },
                 child: Padding(

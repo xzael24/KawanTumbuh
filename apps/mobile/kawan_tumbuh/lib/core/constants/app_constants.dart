@@ -33,4 +33,5 @@ class AppConstants {
   static const String routeProfil                      = '/profil';
   static const String routeNotifikasi                  = '/notifikasi';
   static const String routeLaporan                     = '/laporan';
+  static const String routeChatbot                     = '/chatbot';
 }

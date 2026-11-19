@@ -27,6 +27,7 @@ import 'screens/hasil_kuesioner_screen.dart';
 import 'screens/profil_screen.dart';
 import 'screens/notification_screen.dart';
 import 'screens/laporan_screen.dart';
+import 'screens/chatbot_screen.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
@@ -82,6 +83,7 @@ class KawanTumbuhApp extends StatelessWidget {
         AppConstants.routeProfil:                         (context) => const ProfilScreen(),
         AppConstants.routeNotifikasi:                     (context) => const NotificationScreen(),
         AppConstants.routeLaporan:                        (context) => const LaporanScreen(),
+        AppConstants.routeChatbot:                        (context) => const ChatbotScreen(),
       },
     );
   }

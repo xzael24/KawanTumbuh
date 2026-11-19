@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/notification_model.dart';
 import '../helpers/notification_data.dart';
+import '../widgets/chatbot_overlay.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: _buildBottomNavBar(),
-      floatingActionButton: _buildChatbotFAB(),
+      floatingActionButton: const ChatbotButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
@@ -474,62 +475,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // ── CHATBOT FAB ───────────────────────────────────────────────────────
-  Widget _buildChatbotFAB() {
-    return GestureDetector(
-      onTap: () {
-        // TODO: navigasi ke halaman chatbot
-        _showComingSoonSnackBar('Chatbot segera hadir!');
-      },
-      child: Container(
-        width: 54,
-        height: 54,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF28B6E),
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFF28B6E).withValues(alpha: 0.45),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Image.asset(
-            'assets/images/ic_chatbot.png',
-            width: 28,
-            height: 28,
-            color: Colors.white,
-            errorBuilder: (context, error, stackTrace) => const Icon(
-              Icons.chat_rounded,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ── COMING SOON SNACKBAR ───────────────────────────────────────────────
-  void _showComingSoonSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.quicksand(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: const Color(0xFF5F8F8A),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 2),
       ),
     );
   }
